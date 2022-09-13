@@ -1,0 +1,21 @@
+{
+	"name": "com.jmor.my-packages",
+	"version": "0.0.1",
+	"displayName": "J Mor's Packages",
+	"unity": "2021.3",
+	"unityRelease": "4f1",
+	"description": "",
+	"author": {
+		"name": "Justin Morris",
+		"url": "https://jgm-edu.github.io/"
+	},
+	"keywords": [
+		"jmor",
+		"j mor"
+	],
+	"license": "MIT",
+	"dependencies": {
+	  "com.jmor.custom-ui-bar": "https://github.com/jmortiger/J-Mor-s-Unity-Packages.git?path=/CustomUIBar",
+	  "com.jmor.snap-to-ground": "https://github.com/jmortiger/J-Mor-s-Unity-Packages.git?path=/SnapToGround"
+	}
+}
