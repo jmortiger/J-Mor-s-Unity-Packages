@@ -3,8 +3,7 @@
     "rootNamespace": "JMor.EditorScripts",
     "references": [
         "UnityEngine",
-        "UnityEditor",
-        "UnityEngine.UI"
+        "UnityEditor"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

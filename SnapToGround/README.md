@@ -1,1 +1,1 @@
-Adds a menu option to create a custom UI bar using the Slider UI component.
+Adds a menu option to snap the selected components to the next collider underneath it.
