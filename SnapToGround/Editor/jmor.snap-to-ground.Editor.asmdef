@@ -1,8 +1,18 @@
 {
-	"name": "SnapToGround",
-	"references": [
-		"UnityEngine",
-		"UnityEditor",
-		"UnityEngine.UI"
-	]
+    "name": "SnapToGround",
+    "rootNamespace": "JMor.EditorScripts",
+    "references": [
+        "UnityEngine",
+        "UnityEditor",
+        "UnityEngine.UI"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }
