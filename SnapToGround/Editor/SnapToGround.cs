@@ -6,6 +6,7 @@ namespace JMor.EditorScripts
 	public class SnapToGround : ScriptableObject
 	{
 		// TODO: Account for offsets, colliders, etc.
+		// TODO: Add undo for prefabs https://docs.unity3d.com/ScriptReference/Undo.RecordObject.html , https://docs.unity3d.com/ScriptReference/PrefabUtility.RecordPrefabInstancePropertyModifications.html
 		[MenuItem("Tools/Snap selected to ground")]
 		static void SnapSelectedToGround()
 		{
@@ -13,6 +14,7 @@ namespace JMor.EditorScripts
 			Physics2D.queriesStartInColliders = false;
 			//var qsic3D = Physics.queriesHitBackfaces;
 			//Physics2D.queriesStartInColliders = false;
+			Undo.RecordObjects(Selection.gameObjects, "Snapped Objects Down");
 			foreach (var go in Selection.gameObjects)
 			{
 				Debug.Log($"Attempting to snap {go.name} from {go.transform.position}");
@@ -41,5 +43,9 @@ namespace JMor.EditorScripts
 			}
 			Physics2D.queriesStartInColliders = qsic2D;
 		}
+		
+		// Disable the menu if there is nothing selected
+		[MenuItem("Tools/Snap selected to ground", true)]
+		static bool ValidateSelection() => Selection.activeGameObject != null;
 	}
 }
