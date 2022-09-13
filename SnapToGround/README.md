@@ -1,0 +1,1 @@
+Adds a menu option to create a custom UI bar using the Slider UI component.

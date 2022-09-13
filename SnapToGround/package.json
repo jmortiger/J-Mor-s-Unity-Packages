@@ -1,0 +1,21 @@
+{
+	"name": "com.jmor.custom-ui-bar",
+	"version": "0.0.1",
+	"displayName": "Custom UI Bar",
+	"unity": "2021.3",
+	"unityRelease": "4f1",
+	"description": "Adds a menu option to create a custom UI bar using the Slider UI component.",
+	"author": {
+		"name": "Justin Morris",
+		"url": "https://jgm-edu.github.io/"
+	},
+	"keywords": [
+		"ui",
+		"bar",
+		"health bar",
+		"healthbar",
+		"jmor",
+		"j mor"
+	],
+	"license": "MIT"
+}
