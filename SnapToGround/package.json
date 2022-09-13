@@ -1,19 +1,18 @@
 {
-	"name": "com.jmor.custom-ui-bar",
+	"name": "com.jmor.snap-to-ground",
 	"version": "0.0.1",
-	"displayName": "Custom UI Bar",
+	"displayName": "Snap To Ground",
 	"unity": "2021.3",
 	"unityRelease": "4f1",
-	"description": "Adds a menu option to create a custom UI bar using the Slider UI component.",
+	"description": "Adds a menu option to snap the selected components to the next collider underneath it.",
 	"author": {
 		"name": "Justin Morris",
 		"url": "https://jgm-edu.github.io/"
 	},
 	"keywords": [
-		"ui",
-		"bar",
-		"health bar",
-		"healthbar",
+		"snap",
+		"snap to ground",
+		"snap to floor",
 		"jmor",
 		"j mor"
 	],
