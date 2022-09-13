@@ -1,0 +1,8 @@
+{
+	"name": "CustomUIBar",
+	"references": [
+		"UnityEngine",
+		"UnityEditor",
+		"UnityEngine.UI"
+	]
+}
