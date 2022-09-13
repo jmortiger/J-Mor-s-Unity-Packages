@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-
+// TODO: Fix foldout preventing changing the SO instance and the create button.
 namespace JMor.EditorScripts
 {
 	/// <summary>
