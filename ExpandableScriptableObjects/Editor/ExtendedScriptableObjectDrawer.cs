@@ -1,12 +1,11 @@
 // Developed by Tom Kail at Inkle
 // Released under the MIT Licence as held at https://opensource.org/licenses/MIT
 
-using JMor;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-// TODO: Fix foldout preventing changing the SO instance and the create button.
+
 namespace JMor.EditorScripts
 {
 	/// <summary>
@@ -17,30 +16,28 @@ namespace JMor.EditorScripts
 	[CustomPropertyDrawer(typeof(ExpandableAttribute/*ScriptableObject*/), true)]
 	public class ExtendedScriptableObjectDrawer : PropertyDrawer
 	{
-
 		public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
 		{
 			float totalHeight = EditorGUIUtility.singleLineHeight;
 			if (property.objectReferenceValue == null || !AreAnySubPropertiesVisible(property))
-			{
 				return totalHeight;
-			}
 			if (property.isExpanded)
 			{
 				var data = property.objectReferenceValue as ScriptableObject;
-				if (data == null) return EditorGUIUtility.singleLineHeight;
+				if (data == null)
+					return EditorGUIUtility.singleLineHeight;
 				SerializedObject serializedObject = new(data);
 				SerializedProperty prop = serializedObject.GetIterator();
 				if (prop.NextVisible(true))
 				{
 					do
 					{
-						if (prop.name == "m_Script") continue;
+						if (prop.name == "m_Script")
+							continue;
 						var subProp = serializedObject.FindProperty(prop.name);
 						float height = EditorGUI.GetPropertyHeight(subProp, null, true) + EditorGUIUtility.standardVerticalSpacing;
 						totalHeight += height;
-					}
-					while (prop.NextVisible(false));
+					} while (prop.NextVisible(false));
 				}
 				// Add a tiny bit of height if open for the background
 				totalHeight += EditorGUIUtility.standardVerticalSpacing;
@@ -68,17 +65,17 @@ namespace JMor.EditorScripts
 			}
 
 			ScriptableObject propertySO = null;
-			if (!property.hasMultipleDifferentValues && property.serializedObject.targetObject != null && property.serializedObject.targetObject is ScriptableObject)
-			{
-				propertySO = (ScriptableObject)property.serializedObject.targetObject;
-			}
+			if (!property.hasMultipleDifferentValues && property.serializedObject.targetObject != null && property.serializedObject.targetObject is ScriptableObject obj)
+				propertySO = /*(ScriptableObject)property.serializedObject.targetObject*/obj;
 
 			var guiContent = new GUIContent(property.displayName);
-			var foldoutRect = new Rect(position.x, position.y, position.width/*EditorGUIUtility.labelWidth*/, EditorGUIUtility.singleLineHeight);
+			var foldoutRect = new Rect(
+				position.x, 
+				position.y, 
+				/*position.width*/EditorGUIUtility.labelWidth, // Needs to be label width to stop foldout from preventing changing the SO instance and the create button.
+				EditorGUIUtility.singleLineHeight);
 			if (property.objectReferenceValue != null && AreAnySubPropertiesVisible(property))
-			{
 				property.isExpanded = EditorGUI.Foldout(foldoutRect, property.isExpanded, guiContent, true);
-			}
 			else
 			{
 				// So yeah having a foldout look like a label is a weird hack 
@@ -91,12 +88,14 @@ namespace JMor.EditorScripts
 			var indentedPosition = EditorGUI.IndentedRect(position);
 			var indentOffset = indentedPosition.x - position.x;
 
-			var propertyRect = new Rect(position.x + (EditorGUIUtility.labelWidth - indentOffset), position.y, position.width - (EditorGUIUtility.labelWidth - indentOffset), EditorGUIUtility.singleLineHeight);
+			var propertyRect = new Rect(
+				position.x + (EditorGUIUtility.labelWidth - indentOffset), 
+				position.y, 
+				position.width - (EditorGUIUtility.labelWidth - indentOffset), 
+				EditorGUIUtility.singleLineHeight);
 
 			if (propertySO != null || property.objectReferenceValue == null)
-			{
 				propertyRect.width -= BUTTON_WIDTH;
-			}
 
 			EditorGUI.ObjectField(propertyRect, property, type, GUIContent.none);
 			if (GUI.changed) property.serializedObject.ApplyModifiedProperties();
@@ -123,12 +122,13 @@ namespace JMor.EditorScripts
 						do
 						{
 							// Don't bother drawing the class file
-							if (prop.name == "m_Script") continue;
+							if (prop.name == "m_Script")
+								continue;
 							float height = EditorGUI.GetPropertyHeight(prop, new GUIContent(prop.displayName), true);
 							EditorGUI.PropertyField(new Rect(position.x, y, position.width - indentOffset/*position.width - buttonWidth*/, height), prop, true);
 							y += height + EditorGUIUtility.standardVerticalSpacing;
-						}
-						while (prop.NextVisible(false));
+						} while (prop.NextVisible(false));
+						// If there is a defined sub IMGUI method, execute it. This allows for this class to be inherited and extended (somewhat) easliy.
 						generateSubIMGUI?.Invoke(new Rect(position.x, y, position.width - indentOffset/*position.width - buttonWidth*/, position.height), serializedObject.GetIterator(), new GUIContent("Dynamic"));
 					}
 					if (GUI.changed)
@@ -142,9 +142,9 @@ namespace JMor.EditorScripts
 				if (GUI.Button(buttonRect, "Create"))
 				{
 					string selectedAssetPath = "Assets";
-					if (property.serializedObject.targetObject is MonoBehaviour)
+					if (property.serializedObject.targetObject is MonoBehaviour behaviour)
 					{
-						MonoScript ms = MonoScript.FromMonoBehaviour((MonoBehaviour)property.serializedObject.targetObject);
+						MonoScript ms = MonoScript.FromMonoBehaviour(/*(MonoBehaviour)property.serializedObject.targetObject*/behaviour);
 						selectedAssetPath = System.IO.Path.GetDirectoryName(AssetDatabase.GetAssetPath(ms));
 					}
 
@@ -194,12 +194,9 @@ namespace JMor.EditorScripts
 
 			if (objectReferenceValue != null)
 			{
-
 				EditorGUILayout.EndHorizontal();
 				if (isExpanded)
-				{
 					DrawScriptableObjectChildFields(objectReferenceValue);
-				}
 			}
 			else
 			{
@@ -208,9 +205,7 @@ namespace JMor.EditorScripts
 					string selectedAssetPath = "Assets";
 					var newAsset = CreateAssetWithSavePrompt(typeof(T), selectedAssetPath);
 					if (newAsset != null)
-					{
 						objectReferenceValue = (T)newAsset;
-					}
 				}
 				EditorGUILayout.EndHorizontal();
 			}
@@ -291,9 +286,7 @@ namespace JMor.EditorScripts
 					string selectedAssetPath = "Assets";
 					var newAsset = CreateAssetWithSavePrompt(typeof(T), selectedAssetPath);
 					if (newAsset != null)
-					{
 						objectReferenceValue = (T)newAsset;
-					}
 				}
 				EditorGUILayout.EndHorizontal();
 			}
@@ -305,7 +298,8 @@ namespace JMor.EditorScripts
 		static ScriptableObject CreateAssetWithSavePrompt(Type type, string path)
 		{
 			path = EditorUtility.SaveFilePanelInProject("Save ScriptableObject", type.Name + ".asset", "asset", "Enter a file name for the ScriptableObject.", path);
-			if (path == "") return null;
+			if (path == "")
+				return null;
 			ScriptableObject asset = ScriptableObject.CreateInstance(type);
 			AssetDatabase.CreateAsset(asset, path);
 			AssetDatabase.SaveAssets();
@@ -318,8 +312,10 @@ namespace JMor.EditorScripts
 		Type GetFieldType()
 		{
 			Type type = fieldInfo.FieldType;
-			if (type.IsArray) type = type.GetElementType();
-			else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>)) type = type.GetGenericArguments()[0];
+			if (type.IsArray)
+				type = type.GetElementType();
+			else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
+				type = type.GetGenericArguments()[0];
 			return type;
 		}
 
@@ -330,7 +326,8 @@ namespace JMor.EditorScripts
 			SerializedProperty prop = serializedObject.GetIterator();
 			while (prop.NextVisible(true))
 			{
-				if (prop.name == "m_Script") continue;
+				if (prop.name == "m_Script")
+					continue;
 				return true; //if theres any visible property other than m_script
 			}
 			serializedObject.Dispose();

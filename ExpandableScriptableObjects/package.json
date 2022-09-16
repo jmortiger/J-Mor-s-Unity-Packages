@@ -1,10 +1,10 @@
 {
 	"name": "com.jmor.expandable-scriptable-objects",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"displayName": "Expandable Scriptable Objects",
 	"unity": "2021.3",
 	"unityRelease": "4f1",
-	"description": "Allows ScriptableObjects with the \"Expandable\" attribute to be expanded and edited in the editor.",
+	"description": "Allows ScriptableObject fields with the \"Expandable\" attribute to be expanded and edited in the inspector.",
 	"author": {
 		"name": "Justin Morris",
 		"url": "https://jgm-edu.github.io/"
