@@ -1,0 +1,17 @@
+{
+	"name": "com.jmor.runtime-gizmos",
+	"version": "0.0.1",
+	"displayName": "Runtime Gizmos",
+	"unity": "2021.3",
+	"unityRelease": "4f1",
+	"description": "An alternative for Unity's Gizmos that uses UnityEngine's GL library to work in builds.",
+	"author": {
+		"name": "Justin Morris",
+		"url": "https://jgm-edu.github.io/"
+	},
+	"keywords": [
+		"jmor",
+		"j mor"
+	],
+	"license": "MIT"
+}

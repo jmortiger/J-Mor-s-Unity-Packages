@@ -1,0 +1,16 @@
+{
+    "name": "RuntimeGizmos",
+    "rootNamespace": "JMor.RuntimeGizmos",
+    "references": [
+        "GUID:f3486d759f1e966428221c4fa50e2825"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

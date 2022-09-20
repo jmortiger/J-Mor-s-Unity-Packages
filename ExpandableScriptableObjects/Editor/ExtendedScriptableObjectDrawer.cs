@@ -66,7 +66,7 @@ namespace JMor.EditorScripts
 
 			ScriptableObject propertySO = null;
 			if (!property.hasMultipleDifferentValues && property.serializedObject.targetObject != null && property.serializedObject.targetObject is ScriptableObject obj)
-				propertySO = /*(ScriptableObject)property.serializedObject.targetObject*/obj;
+				propertySO = obj;
 
 			var guiContent = new GUIContent(property.displayName);
 			var foldoutRect = new Rect(
@@ -144,7 +144,7 @@ namespace JMor.EditorScripts
 					string selectedAssetPath = "Assets";
 					if (property.serializedObject.targetObject is MonoBehaviour behaviour)
 					{
-						MonoScript ms = MonoScript.FromMonoBehaviour(/*(MonoBehaviour)property.serializedObject.targetObject*/behaviour);
+						MonoScript ms = MonoScript.FromMonoBehaviour(behaviour);
 						selectedAssetPath = System.IO.Path.GetDirectoryName(AssetDatabase.GetAssetPath(ms));
 					}
 
