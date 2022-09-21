@@ -20,6 +20,7 @@ namespace JMor.Utility
 		#endregion
 
 		#region PlayerInput Helpers
+		#region InputAction.name via string
 #if ENABLE_INPUT_SYSTEM
 		public static bool WasPressedThisFrame(this PlayerInput input, string actionNameOrId)
 		{
@@ -49,6 +50,80 @@ namespace JMor.Utility
 				Gamepad.current.rightStick.ReadValue() :
 				(Vector2)Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue()) - relativeTo).normalized;
 		}
+		#endregion
+		#region InputAction.name via Generic Enum
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <typeparam name="T">
+		/// An enum where the names of all the values DIRECTLY corrospond 
+		/// to the name of an <see cref="InputAction.name"/>.
+		/// </typeparam>
+		/// <param name="input"></param>
+		/// <param name="actionName"></param>
+		/// <returns></returns>
+		/// <remarks>
+		/// This method requires an enum where the names of all the values DIRECTLY corrospond 
+		/// to the name of an <see cref="InputAction.name"/>. As such, InputActions must have names representable 
+		/// in code (i.e. no spaces, certain special characters, etc).
+		/// </remarks>
+		public static bool WasPressedThisFrame<T>(this PlayerInput input, T actionName) where T : System.Enum => input.WasPressedThisFrame(actionName.ToString());
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <typeparam name="T">
+		/// An enum where the names of all the values DIRECTLY corrospond 
+		/// to the name of an <see cref="InputAction.name"/>.
+		/// </typeparam>
+		/// <param name="input"></param>
+		/// <param name="actionName"></param>
+		/// <returns></returns>
+		/// <remarks>
+		/// This method requires an enum where the names of all the values DIRECTLY corrospond 
+		/// to the name of an <see cref="InputAction.name"/>. As such, InputActions must have names representable 
+		/// in code (i.e. no spaces, certain special characters, etc).
+		/// </remarks>
+		public static bool IsPressed<T>(this PlayerInput input, T actionName) where T : System.Enum => input.IsPressed(actionName.ToString());
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <typeparam name="T">
+		/// An enum where the names of all the values DIRECTLY corrospond 
+		/// to the name of an <see cref="InputAction.name"/>.
+		/// </typeparam>
+		/// <param name="input"></param>
+		/// <param name="actionName"></param>
+		/// <returns></returns>
+		/// <remarks>
+		/// This method requires an enum where the names of all the values DIRECTLY corrospond 
+		/// to the name of an <see cref="InputAction.name"/>. As such, InputActions must have names representable 
+		/// in code (i.e. no spaces, certain special characters, etc).
+		/// </remarks>
+		public static InputAction FindAction<T>(this PlayerInput input, T actionName) where T : System.Enum => input.FindAction(actionName.ToString());
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <typeparam name="T">
+		/// An enum where the names of all the values DIRECTLY corrospond 
+		/// to the name of an <see cref="InputAction.name"/>.
+		/// </typeparam>
+		/// <param name="input"></param>
+		/// <param name="actionName"></param>
+		/// <returns></returns>
+		/// <remarks>
+		/// This method requires an enum where the names of all the values DIRECTLY corrospond 
+		/// to the name of an <see cref="InputAction.name"/>. As such, InputActions must have names representable 
+		/// in code (i.e. no spaces, certain special characters, etc).
+		/// </remarks>
+		public static Vector2 GetActionValueAsJoystick<T>(this PlayerInput input, T actionName, Vector2 relativeTo) where T : System.Enum => input.GetActionValueAsJoystick(actionName.ToString(), relativeTo);
+		#endregion
+		public static Vector2 GetRightStickOrMouseValueAsJoystickEditor(this PlayerInput input, Vector2 relativeTo)
+		{
+			return ((Gamepad.current != null) ? 
+				Gamepad.current.rightStick.ReadValue() : 
+				(Vector2)Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue()) - relativeTo).normalized;
+		}
+		#endregion
 #endif
 		#endregion
 
