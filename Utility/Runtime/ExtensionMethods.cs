@@ -20,8 +20,8 @@ namespace JMor.Utility
 		#endregion
 
 		#region PlayerInput Helpers
-		#region InputAction.name via string
 #if ENABLE_INPUT_SYSTEM
+		#region InputAction.name via string
 		public static bool WasPressedThisFrame(this PlayerInput input, string actionNameOrId)
 		{
 			return ((ButtonControl)input.actions.FindAction(actionNameOrId)?.activeControl)?.wasPressedThisFrame ?? false;
@@ -123,7 +123,6 @@ namespace JMor.Utility
 				Gamepad.current.rightStick.ReadValue() : 
 				(Vector2)Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue()) - relativeTo).normalized;
 		}
-		#endregion
 #endif
 		#endregion
 
