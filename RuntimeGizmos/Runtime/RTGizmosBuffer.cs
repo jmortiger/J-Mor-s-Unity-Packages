@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace JMor.RuntimeGizmos
+namespace JMor.Utility.RuntimeGizmos
 {
 	// TODO: Clean up names
 	// TODO: Expand

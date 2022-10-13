@@ -1,8 +1,8 @@
-﻿using System;
+﻿#define JMOR_RUNTIME_GIZMOS
+using System;
 using UnityEngine;
-using JMor.Utility;
 
-namespace JMor.RuntimeGizmos
+namespace JMor.Utility.RuntimeGizmos
 {
 	public enum DrawMode
 	{
@@ -12,28 +12,30 @@ namespace JMor.RuntimeGizmos
 		TRIANGLES		= GL.TRIANGLES,
 		TRIANGLE_STRIP	= GL.TRIANGLE_STRIP,
 	}
-	// TODO: Expand
+	// TODO: Add more gradient support.
+	// TODO: Test existing gradient support.
+	// TODO: Improve naming conventions.
 	public static class RTGizmos
 	{
 		#region State
-		private static Material defaultMaterial;
+		private static Material _defaultMaterial;
 		public static Material DefaultMaterial
 		{
 			get
 			{
-				if (defaultMaterial == null)
+				if (_defaultMaterial == null)
 				{
-					defaultMaterial = new Material(Shader.Find("Hidden/Internal-Colored"))
+					_defaultMaterial = new Material(Shader.Find("Hidden/Internal-Colored"))
 					{ hideFlags = HideFlags.HideAndDontSave };
 					// Turn on alpha blending
-					defaultMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-					defaultMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+					_defaultMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+					_defaultMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
 				}
-				return defaultMaterial;
+				return _defaultMaterial;
 			}
 		}
-		private static Material material;
-		public static Material Material { get => material != null ? material : DefaultMaterial; set => material = value; }
+		private static Material _currentMaterial;
+		public static Material Material { get => _currentMaterial != null ? _currentMaterial : DefaultMaterial; set => _currentMaterial = value; }
 		public static Color Color { get; set; } = Color.white;
 		#endregion
 
@@ -50,6 +52,7 @@ namespace JMor.RuntimeGizmos
 			EndDraw(mat);
 		}
 
+		// TODO: Refactor to use LineStrip
 		public static void DrawLineSegments3D(
 			Tuple<Vector3, Vector3>[] lineSegments,
 			bool drawSegmentsConnected = true,
@@ -70,22 +73,123 @@ namespace JMor.RuntimeGizmos
 			EndDraw(mat);
 		}
 
-		// TODO: Use LineStrip?
+		// TODO: Test after Refactor to use LineStrip
 		public static void DrawConnectedPoints3D(
 			Vector3[] points,
 			bool closeShape = false,
 			Color? color = null,
 			Material mat = null)
 		{
-			BeginDraw(GL.LINES, mat, color);
-			for (int i = 1; i < points.Length; i++)
-			{
-				GL.Vertex(points[i - 1]);
+			//BeginDraw(GL.LINES, mat, color);
+			//for (int i = 1; i < points.Length; i++)
+			//{
+			//	GL.Vertex(points[i - 1]);
+			//	GL.Vertex(points[i]);
+			//}
+			//if (closeShape)
+			//{
+			//	GL.Vertex(points[^1]);
+			//	GL.Vertex(points[0]);
+			//}
+			BeginDraw(GL.LINE_STRIP, mat, color);
+			for (int i = 0; i < points.Length; i++)
 				GL.Vertex(points[i]);
+			if (closeShape && points.Length > 0)
+				GL.Vertex(points[0]);
+			EndDraw(mat);
+		}
+
+		// TODO: Test after Refactor to use LineStrip
+		public static void DrawConnectedPoints2D(
+			Vector2[] points,
+			bool closeShape = false,
+			Color? color = null,
+			Material mat = null)
+		{
+			//BeginDraw(GL.LINES, mat, color);
+			//for (int i = 1; i < points.Length; i++)
+			//{
+			//	GL.Vertex(points[i - 1]);
+			//	GL.Vertex(points[i]);
+			//}
+			//if (closeShape)
+			//{
+			//	GL.Vertex(points[^1]);
+			//	GL.Vertex(points[0]);
+			//}
+			BeginDraw(GL.LINE_STRIP, mat, color);
+			for (int i = 0; i < points.Length; i++)
+				GL.Vertex(points[i]);
+			if (closeShape && points.Length > 0)
+				GL.Vertex(points[0]);
+			EndDraw(mat);
+		}
+
+		#region Complex
+		public static void DrawConnectedPoints3D(
+			Vector3[] points,
+			bool closeShape = false,
+			bool colorForSegments = false,
+			Color[] colors = null,
+			Material mat = null)
+		{
+			if (colors == null || colors.Length <= 0)
+			{
+				DrawConnectedPoints3D(points, closeShape, (Color?)null, mat);
+				return;
 			}
 			if (closeShape)
 			{
+				Debug.Assert(colors.Length >= points.Length, $"Not enough colors for the points.");
+				if (colors.Length > points.Length + 1)
+					Debug.LogWarning($"The {colors.Length} colors are far more than the {points.Length} points. Only the first {points.Length + 1}" +
+						$" colors will be used, and the 1st & last points will have different colors.");
+			}
+			else
+			{
+				Debug.Assert((!colorForSegments && colors.Length >= points.Length) ||
+							(colorForSegments && colors.Length + 1 >= points.Length), $"Not enough colors for the points.");
+				//if (colors.Length > points.Length + 1)
+				//	Debug.LogWarning($"The {colors.Length} colors are far more than the {points.Length} points. Only the first {points.Length + 1}" +
+				//		$" colors will be used, and the 1st & last points will have different colors.");
+			}
+			BeginDraw_Simple(DrawMode.LINES, mat);
+			for (int i = 1; i < points.Length; i++)
+			{
+				GL.Color(colors[i - 1]);
+				GL.Vertex(points[i - 1]);
+				if (!colorForSegments)
+					GL.Color(colors[i]);
+				else
+					GL.Color(colors[i - 1]);
+				GL.Vertex(points[i]);
+			}
+			if (closeShape && points.Length > 0)
+			{
+				if (!colorForSegments)
+					GL.Color(colors[points.Length - 1]);
+				else
+				{
+					if (colors.Length >= points.Length)
+						GL.Color(colors[points.Length]);
+					else
+						GL.Color(colors[points.Length - 1]);
+				}
 				GL.Vertex(points[^1]);
+				if (!colorForSegments)
+				{
+					if (colors.Length == points.Length)
+						GL.Color(colors[0]);
+					else
+						GL.Color(colors[points.Length]);
+				}
+				else
+				{
+					if (colors.Length >= points.Length)
+						GL.Color(colors[points.Length]);
+					else
+						GL.Color(colors[points.Length - 1]);
+				}
 				GL.Vertex(points[0]);
 			}
 			EndDraw(mat);
@@ -94,22 +198,72 @@ namespace JMor.RuntimeGizmos
 		public static void DrawConnectedPoints2D(
 			Vector2[] points,
 			bool closeShape = false,
-			Color? color = null,
+			bool colorForSegments = true,
+			Color[] colors = null,
 			Material mat = null)
 		{
-			BeginDraw(GL.LINES, mat, color);
-			for (int i = 1; i < points.Length; i++)
+			if (colors == null || colors.Length <= 0)
 			{
-				GL.Vertex(points[i - 1]);
-				GL.Vertex(points[i]);
+				DrawConnectedPoints2D(points, closeShape, (Color?)null, mat);
+				return;
 			}
 			if (closeShape)
 			{
+				Debug.Assert(colors.Length >= points.Length, $"Not enough colors for the points.");
+				if (colors.Length > points.Length + 1)
+					Debug.LogWarning($"The {colors.Length} colors are far more than the {points.Length} points. Only the first {points.Length + 1}" +
+						$" colors will be used, and the 1st & last points will have different colors.");
+			}
+			else
+			{
+				Debug.Assert((!colorForSegments && colors.Length >= points.Length) ||
+							(colorForSegments && colors.Length + 1 >= points.Length), $"Not enough colors for the points.");
+				//if (colors.Length > points.Length + 1)
+				//	Debug.LogWarning($"The {colors.Length} colors are far more than the {points.Length} points. Only the first {points.Length + 1}" +
+				//		$" colors will be used, and the 1st & last points will have different colors.");
+			}
+			BeginDraw_Simple(DrawMode.LINES, mat);
+			for (int i = 1; i < points.Length; i++)
+			{
+				GL.Color(colors[i - 1]);
+				GL.Vertex(points[i - 1]);
+				if (!colorForSegments)
+					GL.Color(colors[i]);
+				else
+					GL.Color(colors[i - 1]);
+				GL.Vertex(points[i]);
+			}
+			if (closeShape && points.Length > 0)
+			{
+				if (!colorForSegments)
+					GL.Color(colors[points.Length - 1]);
+				else
+				{
+					if (colors.Length >= points.Length)
+						GL.Color(colors[points.Length]);
+					else
+						GL.Color(colors[points.Length - 1]);
+				}
 				GL.Vertex(points[^1]);
+				if (!colorForSegments)
+				{
+					if (colors.Length == points.Length)
+						GL.Color(colors[0]);
+					else
+						GL.Color(colors[points.Length]);
+				}
+				else
+				{
+					if (colors.Length >= points.Length)
+						GL.Color(colors[points.Length]);
+					else
+						GL.Color(colors[points.Length - 1]);
+				}
 				GL.Vertex(points[0]);
 			}
 			EndDraw(mat);
 		}
+		#endregion
 		#endregion
 
 		#region Box
@@ -192,6 +346,18 @@ namespace JMor.RuntimeGizmos
 			DrawConnectedPoints2D(points, true, color, mat);
 		}
 
+		public static void DrawWireframeCircle2D(
+			Vector2 origin,
+			float radius,
+			int totalPoints = 32,
+			bool colorsForSegments = false,
+			Color[] colors = null,
+			Material mat = null)
+		{
+			var points = MyMath.ComputeCircle(radius: radius, origin: origin, totalPoints: totalPoints);
+			DrawConnectedPoints2D(points, true, colorsForSegments, colors, mat);
+		}
+
 		public static void DrawOutlinedCircle2D(
 			Vector2 origin,
 			float radius,
@@ -223,7 +389,7 @@ namespace JMor.RuntimeGizmos
 
 		#region Helpers
 		#region Begin and End Draw Helpers
-		private static int priorCullValue = 0;
+		private static int _priorCullValue = 0;
 		private static void BeginDraw(int mode, Material mat = null, Color? color = null)
 		{
 			switch (mode)
@@ -250,7 +416,7 @@ namespace JMor.RuntimeGizmos
 		private static void BeginDraw(DrawMode mode, Material mat = null, Color? color = null)
 		{
 			// Temporarily Change culling for safety
-			priorCullValue = (mat != null ? mat : Material).GetInt("_Cull");
+			_priorCullValue = (mat != null ? mat : Material).GetInt("_Cull");
 			(mat != null ? mat : Material).SetInt("_Cull", (int)UnityEngine.Rendering.CullMode.Off);
 			// Apply Material
 			Material.SetPass(0);
@@ -261,6 +427,19 @@ namespace JMor.RuntimeGizmos
 			// Set Color
 			GL.Color(color ?? Color);
 		}
+		private static void BeginDraw_Simple(DrawMode mode, Material mat = null)
+		{
+			// Temporarily Change culling for safety
+			_priorCullValue = (mat != null ? mat : Material).GetInt("_Cull");
+			(mat != null ? mat : Material).SetInt("_Cull", (int)UnityEngine.Rendering.CullMode.Off);
+			// Apply Material
+			Material.SetPass(0);
+			// Store current Model, View, and Projection Matricies
+			GL.PushMatrix();
+			// Begin Draw
+			GL.Begin((int)mode);
+			// Leave setting the Color to the caller.
+		}
 		private static void EndDraw(Material mat = null)
 		{
 			// End Draw
@@ -268,8 +447,8 @@ namespace JMor.RuntimeGizmos
 			// Restore prior Model, View, and Projection Matricies
 			GL.PopMatrix();
 			// Reset culling
-			priorCullValue = (mat != null ? mat : Material).GetInt("_Cull");
-			(mat != null ? mat : Material).SetInt("_Cull", priorCullValue);
+			_priorCullValue = (mat != null ? mat : Material).GetInt("_Cull");
+			(mat != null ? mat : Material).SetInt("_Cull", _priorCullValue);
 		}
 		#endregion
 
@@ -278,8 +457,10 @@ namespace JMor.RuntimeGizmos
 		private static void DrawOrderedClosedShape2D(Vector2[] points)
 		{
 			// Assumes GL.Begin(GL.TRIANGLE_STRIP) has been called.
-			GL.Vertex(points[0]);
+			if (points.Length == 0)
+				return;
 			int halfLength = points.Length / 2;
+			GL.Vertex(points[0]);
 			for (int i = 1; i <= halfLength; i++)
 			{
 				GL.Vertex(points[i]);
@@ -305,6 +486,10 @@ namespace JMor.RuntimeGizmos
 			if (points.Length % 2 == 0)
 				GL.Vertex(points[halfLength]);
 			// Leaves GL.End() to caller
+		}
+		private static void DrawOrderedClosedShape2D_CrossfadedColors(Vector2[] points, Color[] colors)
+		{
+			throw new NotImplementedException();
 		}
 		#endregion
 		#region Outline
@@ -333,6 +518,46 @@ namespace JMor.RuntimeGizmos
 			GL.Vertex(pointsOuter[0]);
 			GL.Vertex(pointsInner[0]);
 			// Leaves GL.End() to caller
+		}
+		private static void DrawOrderedClosedOutline2D_CrossfadedColors(Vector2[] pointsInner, Vector2[] pointsOuter, Color[] colors)
+		{
+			Debug.Assert(pointsOuter.Length == pointsInner.Length);
+			Debug.Assert(pointsOuter.Length == colors.Length);
+			// Assumes GL.Begin(GL.TRIANGLE_STRIP) has been called.
+			for (int i = 0; i < pointsOuter.Length; i++)
+			{
+				GL.Color(colors[i]);
+				GL.Vertex(pointsOuter[i]);
+				GL.Vertex(pointsInner[i]);
+			}
+			GL.Color(colors[0]);
+			GL.Vertex(pointsOuter[0]);
+			GL.Vertex(pointsInner[0]);
+			// Leaves GL.End() to caller
+		}
+		private static void DrawOrderedClosedOutline3D_CrossfadedColors(Vector3[] pointsInner, Vector3[] pointsOuter, Color[] colors)
+		{
+			Debug.Assert(pointsOuter.Length == pointsInner.Length);
+			Debug.Assert(pointsOuter.Length == colors.Length);
+			// Assumes GL.Begin(GL.TRIANGLE_STRIP) has been called.
+			for (int i = 0; i < pointsOuter.Length; i++)
+			{
+				GL.Color(colors[i]);
+				GL.Vertex(pointsOuter[i]);
+				GL.Vertex(pointsInner[i]);
+			}
+			GL.Color(colors[0]);
+			GL.Vertex(pointsOuter[0]);
+			GL.Vertex(pointsInner[0]);
+			// Leaves GL.End() to caller
+		}
+		private static void DrawOrderedClosedOutline2D_SegmentedColors(Vector2[] pointsInner, Vector2[] pointsOuter, Color[] colors)
+		{
+			throw new NotImplementedException();
+		}
+		private static void DrawOrderedClosedOutline3D_SegmentedColors(Vector3[] pointsInner, Vector3[] pointsOuter, Color[] colors)
+		{
+			throw new NotImplementedException();
 		}
 		#endregion
 		#endregion
