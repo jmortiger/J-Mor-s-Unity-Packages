@@ -1,0 +1,17 @@
+{
+	"name": "com.jmor.vector-range-attribute",
+	"version": "1.0.0",
+	"displayName": "Vector Range Attribute",
+	"unity": "2021.3",
+	"unityRelease": "4f1",
+	"description": "Adds a \"VectorRange\" attribute that allows Vector2 & Vector3 fields to have ranges in the inspector, similarly to the built-in \"Range\" attribute.",
+	"author": {
+		"name": "Justin Morris",
+		"url": "https://jgm-edu.github.io/"
+	},
+	"keywords": [
+		"jmor",
+		"j mor"
+	],
+	"license": "MIT"
+}

@@ -16,6 +16,9 @@
 	"license": "MIT",
 	"dependencies": {
 	  "com.jmor.custom-ui-bar": "https://github.com/jmortiger/J-Mor-s-Unity-Packages.git?path=/CustomUIBar",
-	  "com.jmor.snap-to-ground": "https://github.com/jmortiger/J-Mor-s-Unity-Packages.git?path=/SnapToGround"
+	  "com.jmor.snap-to-ground": "https://github.com/jmortiger/J-Mor-s-Unity-Packages.git?path=/SnapToGround",
+	  "com.jmor.vector-range-attribute": "https://github.com/jmortiger/J-Mor-s-Unity-Packages.git?path=/VectorRangeAttribute",
+	  "com.jmor.expandable-scriptable-objects": "https://github.com/jmortiger/J-Mor-s-Unity-Packages.git?path=/ExpandableScriptableObjects",
+	  "com.jmor.runtime-gizmos": "https://github.com/jmortiger/J-Mor-s-Unity-Packages.git?path=/RuntimeGizmos"
 	}
 }

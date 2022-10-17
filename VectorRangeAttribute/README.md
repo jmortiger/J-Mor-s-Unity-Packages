@@ -1,0 +1,1 @@
+Adds a "VectorRange" attribute that allows Vector2 & Vector3 fields to have ranges in the inspector, similarly to the built-in "Range" attribute.
