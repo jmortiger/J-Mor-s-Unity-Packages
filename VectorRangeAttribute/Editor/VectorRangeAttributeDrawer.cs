@@ -81,6 +81,7 @@ public class VectorRangeAttributeDrawer : PropertyDrawer
     }
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)// => (!IsValid(property)) ? HELP_HEIGHT : base.GetPropertyHeight(property, label);
 	{
+		Debug.Log($"currentViewWidth: {EditorGUIUtility.currentViewWidth}");
 		var baseHeight = base.GetPropertyHeight(property, label);
 		return EditorGUIUtility.currentViewWidth < VECTOR_LINE_BREAK_WIDTH ? baseHeight * 2 : baseHeight;
 	}
