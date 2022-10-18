@@ -24,6 +24,8 @@ public Vector2 yourVector;
 using UnityEngine;
 using UnityEditor;
 
+namespace JMor.EditorScripts.Utility
+{
 // TODO: Add to Unity Packages
 // TODO: Refactor to derive from Vector?
 [CustomPropertyDrawer(typeof(VectorRangeAttribute))]
@@ -95,4 +97,5 @@ public class VectorRangeAttributeDrawer : PropertyDrawer
             return vector.x >= RangeAttribute.fMinX && vector.x <= RangeAttribute.fMaxX && vector.y >= RangeAttribute.fMinY && vector.y <= RangeAttribute.fMaxY;
 		}
     }
+}
 }

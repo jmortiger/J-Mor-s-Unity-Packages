@@ -23,23 +23,25 @@ public Vector2 yourVector;
 // TAKEN FROM https://gist.github.com/DGoodayle/69c9c06eb0a277d833c5
 #define JMOR_VECTOR_RANGE_ATTRIBUTE
 using UnityEngine;
-
-// TODO: Add to Unity Packages
-// TODO: Doc comments
-public class VectorRangeAttribute : PropertyAttribute
+namespace JMor.Utility
 {
-    public readonly float fMinX, fMaxX, fMinY, fMaxY, fMinZ, fMaxZ;
-    public readonly bool bClamp;
-    public VectorRangeAttribute(float fMinX, float fMaxX, float fMinY, float fMaxY, float fMinZ = float.NaN, float fMaxZ = float.NaN, bool bClamp = true)
-    {
-        this.fMinX = fMinX;
-        this.fMaxX = fMaxX;
-        this.fMinY = fMinY;
-        this.fMaxY = fMaxY;
-        this.fMinZ = fMinZ;
-        this.fMaxZ = fMaxZ;
-        this.bClamp = bClamp;
-    }
-
-    public bool IsVector3() => float.IsFinite(fMinZ) && float.IsFinite(fMaxZ);
+	// TODO: Add to Unity Packages
+	// TODO: Doc comments
+	public class VectorRangeAttribute : PropertyAttribute
+	{
+	    public readonly float fMinX, fMaxX, fMinY, fMaxY, fMinZ, fMaxZ;
+	    public readonly bool bClamp;
+	    public VectorRangeAttribute(float fMinX, float fMaxX, float fMinY, float fMaxY, float fMinZ = float.NaN, float fMaxZ = float.NaN, bool bClamp = true)
+	    {
+	        this.fMinX = fMinX;
+	        this.fMaxX = fMaxX;
+	        this.fMinY = fMinY;
+	        this.fMaxY = fMaxY;
+	        this.fMinZ = fMinZ;
+	        this.fMaxZ = fMaxZ;
+	        this.bClamp = bClamp;
+	    }
+	
+	    public bool IsVector3() => float.IsFinite(fMinZ) && float.IsFinite(fMaxZ);
+	}
 }
