@@ -35,6 +35,8 @@ public class VectorRangeAttributeDrawer : PropertyDrawer
     const int HELP_HEIGHT = 32;
     const int TEXT_HEIGHT = 16;
     const int BASE_HEIGHT = 18;
+	// 345 comes from https://answers.unity.com/questions/1844022/how-to-get-width-at-which-inspector-does-line-brea.html
+	const int VECTOR_LINE_BREAK_WIDTH = /*345*/351;
     VectorRangeAttribute RangeAttribute { get { return (VectorRangeAttribute)attribute; } }
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
@@ -77,11 +79,10 @@ public class VectorRangeAttributeDrawer : PropertyDrawer
         DrawHelpBox(helpPosition, property);
         GUI.color = previous;
     }
-	// 345 comes from https://answers.unity.com/questions/1844022/how-to-get-width-at-which-inspector-does-line-brea.html
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)// => (!IsValid(property)) ? HELP_HEIGHT : base.GetPropertyHeight(property, label);
 	{
 		var baseHeight = base.GetPropertyHeight(property, label);
-		return EditorGUIUtility.currentViewWidth < 345 ? baseHeight * 2 : baseHeight;
+		return EditorGUIUtility.currentViewWidth < VECTOR_LINE_BREAK_WIDTH ? baseHeight * 2 : baseHeight;
 	}
     void DrawHelpBox(Rect position, SerializedProperty prop)
     {
