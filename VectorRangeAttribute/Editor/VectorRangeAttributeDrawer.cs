@@ -23,6 +23,7 @@ public Vector2 yourVector;
 // TAKEN FROM https://gist.github.com/DGoodayle/69c9c06eb0a277d833c5
 using UnityEngine;
 using UnityEditor;
+using JMor.Utility;
 
 namespace JMor.EditorScripts.Utility
 {
