@@ -29,6 +29,7 @@ namespace JMor.EditorScripts.Utility
 {
 // TODO: Add to Unity Packages
 // TODO: Refactor to derive from Vector?
+// TODO: LOW PRIORITY. Spacing between this property and the following property is non-existant. Tweak and fix.
 [CustomPropertyDrawer(typeof(VectorRangeAttribute))]
 public class VectorRangeAttributeDrawer : PropertyDrawer
 {
@@ -40,8 +41,8 @@ public class VectorRangeAttributeDrawer : PropertyDrawer
         Color previous = GUI.color;
         GUI.color = !IsValid(property) ? Color.red : Color.white;
         Rect textFieldPosition = position;
-        textFieldPosition.width = position.width;
-        textFieldPosition.height = position.height;
+        // textFieldPosition.width = position.width;
+        // textFieldPosition.height = position.height;
         EditorGUI.BeginChangeCheck();
         if (RangeAttribute.IsVector3())
         {
@@ -76,7 +77,8 @@ public class VectorRangeAttributeDrawer : PropertyDrawer
         DrawHelpBox(helpPosition, property);
         GUI.color = previous;
     }
-    public override float GetPropertyHeight(SerializedProperty property, GUIContent label) => (!IsValid(property)) ? HELP_HEIGHT : base.GetPropertyHeight(property, label);
+	// 345 comes from https://answers.unity.com/questions/1844022/how-to-get-width-at-which-inspector-does-line-brea.html
+    public override float GetPropertyHeight(SerializedProperty property, GUIContent label) => /*(!IsValid(property)) ? HELP_HEIGHT : base.GetPropertyHeight(property, label)*/EditorGUIUtility.currentViewWidth < 345 ? TEXT_HEIGHT * 2 : TEXT_HEIGHT;
     void DrawHelpBox(Rect position, SerializedProperty prop)
     {
         // No need for a help box if the pattern is valid.
