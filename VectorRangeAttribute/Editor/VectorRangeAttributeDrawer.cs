@@ -83,7 +83,7 @@ public class VectorRangeAttributeDrawer : PropertyDrawer
 	{
 		// Debug.Log($"currentViewWidth: {EditorGUIUtility.currentViewWidth}");
 		var baseHeight = base.GetPropertyHeight(property, label);
-		return EditorGUIUtility.currentViewWidth < VECTOR_LINE_BREAK_WIDTH ? baseHeight * 2 : baseHeight;
+		return EditorGUIUtility.currentViewWidth <= VECTOR_LINE_BREAK_WIDTH ? baseHeight * 2 : baseHeight;
 	}
     void DrawHelpBox(Rect position, SerializedProperty prop)
     {
