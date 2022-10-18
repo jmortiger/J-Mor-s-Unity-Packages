@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-namespace JMor.EditorScripts
+namespace JMor.EditorScripts.Utility
 {
 	/// <summary>
 	/// Extends how ScriptableObject object references are displayed in the inspector

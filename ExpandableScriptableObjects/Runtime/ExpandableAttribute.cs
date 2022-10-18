@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿#define JMOR_EXPANDABLE
+using UnityEngine;
 
-namespace JMor
+namespace JMor.Utility
 {
 	public class ExpandableAttribute : PropertyAttribute
 	{
