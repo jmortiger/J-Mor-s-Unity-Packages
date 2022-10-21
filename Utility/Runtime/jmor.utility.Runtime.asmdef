@@ -2,7 +2,8 @@
     "name": "Utility",
     "rootNamespace": "JMor.Utility",
     "references": [
-        "UnityEngine"
+        "UnityEngine",
+        "Unity.InputSystem"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
