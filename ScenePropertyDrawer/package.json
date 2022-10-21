@@ -1,0 +1,17 @@
+{
+	"name": "com.jmor.scene-property-drawer",
+	"version": "1.0.0",
+	"displayName": "Scene Property Drawer",
+	"unity": "2021.3",
+	"unityRelease": "4f1",
+	"description": "Allows Scenes (.unity files) to be placed in the inspector for scene management.\nFull package suite: https://github.com/jmortiger/J-Mor-s-Unity-Packages",
+	"author": {
+		"name": "Justin Morris",
+		"url": "https://jgm-edu.github.io/"
+	},
+	"keywords": [
+		"jmor",
+		"j mor"
+	],
+	"license": "MIT"
+}
