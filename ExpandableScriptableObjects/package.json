@@ -4,7 +4,7 @@
 	"displayName": "Expandable Scriptable Objects",
 	"unity": "2021.3",
 	"unityRelease": "4f1",
-	"description": "Allows ScriptableObject fields with the \"Expandable\" attribute to be expanded and edited in the inspector.",
+	"description": "Allows ScriptableObject fields with the \"Expandable\" attribute to be expanded and edited in the inspector.\nFull package suite: https://github.com/jmortiger/J-Mor-s-Unity-Packages",
 	"author": {
 		"name": "Justin Morris",
 		"url": "https://jgm-edu.github.io/"

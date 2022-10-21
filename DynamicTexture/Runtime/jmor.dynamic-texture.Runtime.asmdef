@@ -1,0 +1,14 @@
+{
+    "name": "DynamicTexture",
+    "rootNamespace": "JMor.Utility.DynamicTexture",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

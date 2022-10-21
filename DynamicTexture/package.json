@@ -1,0 +1,17 @@
+{
+	"name": "com.jmor.dynamic-texture",
+	"version": "0.0.1",
+	"displayName": "Dynamic Texture",
+	"unity": "2021.3",
+	"unityRelease": "4f1",
+	"description": "Dynamically generate textures in realtime.",
+	"author": {
+		"name": "Justin Morris",
+		"url": "https://jgm-edu.github.io/"
+	},
+	"keywords": [
+		"jmor",
+		"j mor"
+	],
+	"license": "MIT"
+}
