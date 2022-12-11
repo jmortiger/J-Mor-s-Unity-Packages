@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 9eef960245adf844784f6fb38a641a5b
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - input: {instanceID: 0}
+  - aimAction: {instanceID: 0}
+  - overlapResolutionMode: {fileID: 11400000, guid: 76027e93e40ff204294b197aef5b2ccf, type: 2}
+  - mutatorMode: {fileID: 11400000, guid: 13db8a394ef76f5469f2e5bd93307bea, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,17 @@
+{
+	"name": "com.jmor.rotate-around",
+	"version": "0.0.1",
+	"displayName": "Rotate Around",
+	"unity": "2021.3",
+	"unityRelease": "4f1",
+	"description": "A tool for rotating objects around a point in space.",
+	"author": {
+		"name": "Justin Morris",
+		"url": "https://jgm-edu.github.io/"
+	},
+	"keywords": [
+		"jmor",
+		"j mor"
+	],
+	"license": "MIT"
+}

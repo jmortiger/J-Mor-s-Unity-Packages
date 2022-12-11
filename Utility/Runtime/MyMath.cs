@@ -283,6 +283,7 @@ namespace JMor.Utility
 		/// <param name="yValues"></param>
 		/// <returns></returns>
 		/// <remarks>This is a port of https://en.wikipedia.org/wiki/Monotone_cubic_interpolation#Example_implementation to C#, with some minor tweaks.</remarks>
+		// UGLY: Clean up
 		public static Func<float, float> ConstructInterpolaterFunction(float[] xValues, float[] yValues/*, bool setupDone = false*/)
 		{
 			#region Deal with length edge cases

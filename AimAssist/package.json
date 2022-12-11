@@ -1,0 +1,20 @@
+{
+	"name": "com.jmor.aim-assist",
+	"version": "0.0.1",
+	"displayName": "Aim Assist",
+	"unity": "2021.3",
+	"unityRelease": "4f1",
+	"description": "An aim assist implementation based off of this video (https://www.youtube.com/watch?v=yGci-Lb87zs).\nFull package suite: https://github.com/jmortiger/J-Mor-s-Unity-Packages",
+	"author": {
+		"name": "Justin Morris",
+		"url": "https://jgm-edu.github.io/"
+	},
+	"keywords": [
+		"aim assist",
+		"aim",
+		"assist",
+		"jmor",
+		"j mor"
+	],
+	"license": "MIT"
+}

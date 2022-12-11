@@ -1,0 +1,17 @@
+{
+	"name": "com.jmor.input-extension",
+	"version": "0.0.1",
+	"displayName": "Input Extension",
+	"unity": "2021.3",
+	"unityRelease": "4f1",
+	"description": "Extension and helper for input.\nFull package suite: https://github.com/jmortiger/J-Mor-s-Unity-Packages",
+	"author": {
+		"name": "Justin Morris",
+		"url": "https://jgm-edu.github.io/"
+	},
+	"keywords": [
+		"jmor",
+		"j mor"
+	],
+	"license": "MIT"
+}

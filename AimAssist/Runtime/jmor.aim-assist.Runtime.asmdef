@@ -1,0 +1,19 @@
+{
+    "name": "AimAssist",
+    "rootNamespace": "JMor.AimAssist",
+    "references": [
+        "GUID:f3486d759f1e966428221c4fa50e2825",
+        "GUID:aaaecf676903f99469f4fc502bd5cab8",
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:83478240c739b914abe50276b6227e43"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

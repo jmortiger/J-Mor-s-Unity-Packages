@@ -244,15 +244,36 @@ namespace JMor.Utility
 				throw new ArgumentException("indexesToSlideUp is not <= source.Length");
 			output = new T[source.Length];
 			for (int i = 0; i < source.Length; i++)
-				output[i] = (i + indexesToSlideUp > source.Length) ? defaultValue : source[i + indexesToSlideUp];
+				output[i] = (i + indexesToSlideUp >= source.Length) ? defaultValue : source[i + indexesToSlideUp];
 		}
 		public static void SlideElementsUp<T>(this T[] source, T defaultValue, uint indexesToSlideUp = 1)
 		{
 			if (indexesToSlideUp > source.Length)
 				throw new ArgumentException("indexesToSlideUp is not <= source.Length");
 			for (int i = 0; i < source.Length; i++)
-				source[i] = (i + indexesToSlideUp > source.Length) ? defaultValue : source[i + indexesToSlideUp];
+				source[i] = (i + indexesToSlideUp >= source.Length) ? defaultValue : source[i + indexesToSlideUp];
 		}
+		#endregion
+		#region RemoveAt
+		public static void RemoveAt<T>(this T[] source, int index, out T[] output) => source.RemoveAt((uint)index, out output);
+		public static void RemoveAt<T>(this T[] source, uint index, out T[] output)
+		{
+			if (index >= source.Length)
+				throw new ArgumentException("index is not < source.Length");
+			output = new T[source.Length - 1];
+			for (int i = 0; i < source.Length - 1; i++)
+				output[i] = (i < index) ? source[i] : source[i + 1];
+		}
+		//public static void RemoveAt<T>(this T[] source, int index) => source.RemoveAt((uint)index);
+		//public static void RemoveAt<T>(this T[] source, uint index)
+		//{
+		//	if (index >= source.Length)
+		//		throw new ArgumentException("index is not < source.Length");
+		//	var t = new T[source.Length - 1];
+		//	for (int i = 0; i < source.Length - 1; i++)
+		//		t[i] = (i < index) ? source[i] : source[i + 1];
+		//	source = t;
+		//}
 		#endregion
 		#endregion
 
@@ -269,6 +290,9 @@ namespace JMor.Utility
 					return true;
 			return false;
 		}
+
+		public static bool IsInRange(this float value, float min, float max) => value > min && value < max/* || value < min && value > max*/;
+		public static bool IsInRange(this float value, Vector2 range) => value > range.x && value < range.y || value < range.x && value > range.y;
 		#endregion
 	}
 }
