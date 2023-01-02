@@ -52,6 +52,8 @@ namespace JMor.AimAssist
 			}
 		}
 
+		// TODO: Figure out how many points on either side of a given point affect the curve at that point. Put here.
+		const sbyte numPointsAffectingSplineAtPoint = 5;
 		/// <summary>
 		/// To prevent snapping around 0 & 360 degrees, you need to duplicate your final points with a + & - 360 degree offset. This function handles this.
 		/// </summary>
@@ -61,11 +63,24 @@ namespace JMor.AimAssist
 		public void MutateInputRanges_HandleLoopingRange(ref List<float> inputs, ref List<float> outputs)
 		{
 			var initialCount = inputs.Count;
-			// To handle angles < 0 and > 360, duplicate angles with offsets of +/-360
-			for (int i = 0; i < initialCount; i++)
+			// Naive Approach: Duplicate the sets for the high and low ends. Higher complexity, more memory, works for sure.
+			// for (int i = 0; i < initialCount; i++)
+			// {
+			// 	inputs.Add(inputs[i] - 360f);
+			// 	outputs.Add(outputs[i] - 360f);
+			// 	inputs.Add(inputs[i] + 360f);
+			// 	outputs.Add(outputs[i] + 360f);
+			// }
+			// Conservative Approach: Copy only the points at the beginning and end
+			var pointsToCopy = (numPointsAffectingSplineAtPoint - (numPointsAffectingSplineAtPoint % 2)) / 2;
+			pointsToCopy = pointsToCopy > initialCount ? initialCount : pointsToCopy;
+			for (int i = initialCount - pointsToCopy; i < initialCount; i++)
 			{
 				inputs.Add(inputs[i] - 360f);
 				outputs.Add(outputs[i] - 360f);
+			}
+			for (int i = 0; i < pointsToCopy; i++)
+			{
 				inputs.Add(inputs[i] + 360f);
 				outputs.Add(outputs[i] + 360f);
 			}

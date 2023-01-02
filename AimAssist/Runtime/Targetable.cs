@@ -9,9 +9,15 @@ namespace JMor.AimAssist
 	{
 		#region Fields and Properties
 		public new Collider2D collider;
-		[Tooltip("The strength of the correction.")]
-		[Range(0, 1)]
-		public float correctionStrength = 1;
+		// [Tooltip("The strength of the correction.")]
+		// [Range(0, 1)]
+		// public float correctionStrength = 1;
+
+		// [Tooltip("The strength of the correction.")]
+		public MutatorMode mutatorMode = null;
+
+		[Tooltip("Tells targeters to use the mutator defined above over their own, even if they would normally prioritize their own.")]
+		public bool forceMyMutator = false;
 
 		public Vector2 Center { get => collider.bounds.center; }
 		public Vector3 CenterV3 { get => collider.bounds.center; }
@@ -35,7 +41,7 @@ namespace JMor.AimAssist
 		//	for (int i = 0; i < targeters.Length; i++)
 		//		DrawGizmos(targeters[i]);
 		//}
-		public void DrawGizmos(Targeter targeter)
+		public void DrawGizmos(Targeter targeter, bool logStatements = false)
 		{
 			var from = targeter.transform.position;
 
@@ -44,7 +50,7 @@ namespace JMor.AimAssist
 			Gizmos.DrawRay(collider.bounds.center, GetVectorToSide(fV2, false));
 
 			var r = GetInputRange(from, Vector2.right);
-			Debug.Log($"{name} Angle Range: {r.x} - {r.y}");
+			if (logStatements) Debug.Log($"{name} Angle Range: {r.x} - {r.y}");
 			var fromToCursorDisplacement = MouseHelper.WorldPosition - (Vector2)from;
 			var mAngle = Vector2.SignedAngle(Vector2.right, fromToCursorDisplacement);
 			mAngle = (mAngle < 0) ? mAngle + 360 : mAngle;
@@ -53,14 +59,14 @@ namespace JMor.AimAssist
 
 			Gizmos.color = Color.green;
 			var p = GetExtremePoint(from, true);
-			Debug.Log($"{name}'s PointRight: {p}");
+			if (logStatements) Debug.Log($"{name}'s PointRight: {p}");
 			Gizmos.DrawSphere(p, .1f);
 			Gizmos.color = (mAngle > r.x && mAngle < r.y) ? Color.red : Color.green;
 			Gizmos.DrawLine(from, from + Quaternion.Euler(0, 0, r.x) * Vector2.right * (p - fV2).magnitude);
 
 			Gizmos.color = Color.blue;
 			p = GetExtremePoint(from);
-			Debug.Log($"{name}'s PointLeft: {p}");
+			if (logStatements) Debug.Log($"{name}'s PointLeft: {p}");
 			Gizmos.DrawSphere(p, .1f);
 			Gizmos.color = (mAngle > r.x && mAngle < r.y) ? Color.red : Color.blue;
 			Gizmos.DrawLine(from, from + Quaternion.Euler(0, 0, r.y) * Vector2.right * (p - fV2).magnitude);
