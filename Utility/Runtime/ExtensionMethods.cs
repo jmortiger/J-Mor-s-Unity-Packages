@@ -277,6 +277,82 @@ namespace JMor.Utility
 		#endregion
 		#endregion
 
+		#region Validation
+		// public static bool Validate(ref this float value, float substitute = 0f)
+		// {
+		// 	if (float.IsFinite(value))
+		// 		return true;
+		// 	else {
+		// 		value = substitute;
+		// 		return false;
+		// 	}
+		// }
+		public static float Validate(this float value, float substitute = 0f) => float.IsFinite(value) ? value : substitute;
+		public static bool IsValid(this float value, float minInclusive = float.MinValue, float maxInclusive = float.MaxValue) => float.IsFinite(value) && value >= minInclusive && value <= maxInclusive ? true : false;
+		#endregion
+
+		#region Floating Point Comparision
+		// TODO: Unit Test the following 2. This concerns me https://roundwide.com/equality-comparison-of-floating-point-numbers-in-csharp/. Adapted from https://stackoverflow.com/a/3875619/9819929
+		public static bool Approximately(this double a, double b, double epsilon = 2.2250738585072014E-308d/*1E-10d*//*double.Epsilon*/)
+		{
+			if (a.Equals(b)) return true; // Strict Equality
+			byte safety = 100;
+			while (epsilon >= 1 && safety > 0) {
+				epsilon = 1d / epsilon;
+				--safety;
+			}
+		    var absA = Math.Abs(a);
+		    var absB = Math.Abs(b);
+			var diff = Math.Abs(a - b);
+		
+			return  diff <= epsilon || // Absolute Error
+					diff <= Math.Min/*Max*/(absA, absB) * epsilon; // Relative Error
+			#region Old
+			// const double MinNormal = 2.2250738585072014E-308d;
+			// var absA = Math.Abs(a);
+			// var absB = Math.Abs(b);
+			// var diff = Math.Abs(a - b);
+		
+			// if (a.Equals(b))
+			//     return true;
+			// else if (a == 0 || b == 0 || absA + absB < MinNormal) 
+			//     // a or b is zero or both are extremely close to it; relative error is less meaningful here
+			//     return diff < (epsilon * MinNormal);
+			// else // use relative error
+			//     return diff / (absA + absB) < epsilon;
+			#endregion
+		}
+		public static bool Approximately(this float a, float b, float epsilon = 1.17549435E-38f/*1E-10f*//*float.Epsilon*/)
+		{
+			if (a.Equals(b)) return true; // Strict Equality
+			byte safety = 100;
+			while (epsilon >= 1 && safety > 0) {
+				epsilon = 1f / epsilon;
+				--safety;
+			}
+		    var absA = Math.Abs(a);
+		    var absB = Math.Abs(b);
+			var diff = Math.Abs(a - b);
+		
+			return  diff <= epsilon || // Absolute Error
+					diff <= Math.Min/*Max*/(absA, absB) * epsilon; // Relative Error
+			#region Old
+			// const float MinNormal = 1.17549435E-38f;
+			// var absA = Math.Abs(a);
+			// var absB = Math.Abs(b);
+			// var diff = Math.Abs(a - b);
+		
+			// if (a.Equals(b))
+			//     return true;
+			// else if (a == 0 || b == 0 || absA + absB < MinNormal) 
+			//     // a or b is zero or both are extremely close to it; relative error is less meaningful here
+			//     return diff < (epsilon * MinNormal);
+			// else // use relative error
+			//     return diff / (absA + absB) < epsilon;
+			#endregion
+		}
+		#endregion
+
 		#region Miscellaneous
 		public static void LogQualifiedName(this Type type)
 		{
@@ -293,6 +369,9 @@ namespace JMor.Utility
 
 		public static bool IsInRange(this float value, float min, float max) => value > min && value < max/* || value < min && value > max*/;
 		public static bool IsInRange(this float value, Vector2 range) => value > range.x && value < range.y || value < range.x && value > range.y;
+
+		public static T As<T>(this object o) where T : class => (T)o;
+		public static T To<T>(this object o) where T : class => (T)o;
 		#endregion
 	}
 }
