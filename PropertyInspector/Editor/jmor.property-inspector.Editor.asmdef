@@ -1,0 +1,17 @@
+{
+    "name": "jmor.property-inspector.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:c4b928a17263fab49a6bc5c38fb230eb",
+        "GUID:f3486d759f1e966428221c4fa50e2825"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
