@@ -41,6 +41,22 @@ namespace JMor.Utility
 	        this.fMaxZ = fMaxZ;
 	        this.bClamp = bClamp;
 	    }
+		// #region Ctors
+		// public VectorRangeAttribute(float fMinX, float fMaxX, float fMinY, float fMaxY, float fMinZ = float.NaN, float fMaxZ = float.NaN, bool bClamp = true)
+	    // {
+	    //     this.fMinX = fMinX;
+	    //     this.fMaxX = fMaxX;
+	    //     this.fMinY = fMinY;
+	    //     this.fMaxY = fMaxY;
+	    //     this.fMinZ = fMinZ;
+	    //     this.fMaxZ = fMaxZ;
+	    //     this.bClamp = bClamp;
+	    // }
+	    // public VectorRangeAttribute(Vector2 min, Vector2 max, bool bClamp = true)
+		// 	:this(min.x, max.x, min.y, max.y, float.NaN, float.NaN, bClamp) {}
+	    // public VectorRangeAttribute(Vector3 min, Vector3 max, bool bClamp = true)
+		// 	:this(min.x, max.x, min.y, max.y, min.z, max.z, bClamp) {}
+		// #endregion
 	
 	    public bool IsVector3() => float.IsFinite(fMinZ) && float.IsFinite(fMaxZ);
 	}
