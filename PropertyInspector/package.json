@@ -1,6 +1,6 @@
 {
 	"name": "com.jmor.property-inspector",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"displayName": "Property Inspector",
 	"unity": "2021.3",
 	"unityRelease": "4f1",

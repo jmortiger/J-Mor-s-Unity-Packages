@@ -106,6 +106,74 @@ For each property you want in the inspector, do the following:
 		```
 3. For now, that's it. There are plans for things like showing labels for readonly/getter-only properties that will require more, but for now, that's it.
 
+### Using Built-in UnityEngine attributes
+The following UnityEngine attributes show what are and are not supported by the Property Inspector Drawer.
+
+Legend:
+
+| Yes | No | Maybe/Not Yet |
+| :---: | :---: | :---: |
+| ✔️ | ❌ | ❓ |
+
+| Attribute | Support Status | Planned Support Status | Allowed on Properties Directly |  Allowed on Properties Using Workaround | Notes |
+| :--- | :---: | :---: | :---: | :---: | :--- |
+| **[AddComponentMenu](https://docs.unity3d.com/ScriptReference/AddComponentMenu)** | Unsupported❌ | Unsupported❌ | ✔️ | ❌ | Only affects classes by default. No effect on properties. |
+| **[AssemblyIsEditorAssembly](https://docs.unity3d.com/ScriptReference/AssemblyIsEditorAssembly)** | Unsupported❌ | Supported✔️ | ❌ | ❌ | Only valid on assemblies by default. No effect on properties. |
+| **[BeforeRenderOrderAttribute](https://docs.unity3d.com/ScriptReference/BeforeRenderOrderAttribute)** | Unsupported❌ | Unsupported❌ | ❌ | ❌ | Only valid on methods by default. No effect on properties. |
+| **[ColorUsageAttribute](https://docs.unity3d.com/ScriptReference/ColorUsageAttribute)** | Unsupported❌ | Supported✔️ | ❌ | ❓ | Only valid on fields by default. |
+| **[ContextMenu](https://docs.unity3d.com/ScriptReference/ContextMenu)** | Unsupported❌ | Unsupported❌ | ❌ | ❌ | Only valid on methods by default. No effect on properties. |
+| **[ContextMenuItemAttribute](https://docs.unity3d.com/ScriptReference/ContextMenuItemAttribute)** | Unsupported❌ | Supported✔️ | ❌ | ❓ | Only valid on fields by default. Might require more work on user's end than the default. |
+| **[CreateAssetMenuAttribute](https://docs.unity3d.com/ScriptReference/CreateAssetMenuAttribute)** | Unsupported❌ | Maybe❓ | ❌ | ❓ | Only valid on classes by default. No effect on properties. Might be used to create scriptable objects? Definitely won't work like the default. |
+| **[CustomGridBrushAttribute](https://docs.unity3d.com/ScriptReference/CustomGridBrushAttribute)** | Unsupported❌ | Unsupported❌ | ❌ | ❌ | Only valid on classes by default. No effect on properties. |
+| **[DelayedAttribute](https://docs.unity3d.com/ScriptReference/DelayedAttribute)** | Unsupported❌ | Maybe❓ | ❌ | ❓ | Only valid on fields by default. Requires testing |
+| **[DisallowMultipleComponent](https://docs.unity3d.com/ScriptReference/DisallowMultipleComponent)** | Unsupported❌ | Unsupported❌ | ❌ | ❌ | Only valid on classes by default. No effect on properties. |
+| **[ExcludeFromObjectFactoryAttribute](https://docs.unity3d.com/ScriptReference/ExcludeFromObjectFactoryAttribute)** | Unsupported❌ | Unsupported❌ | ❌ | ❌ | Only valid on classes by default. No effect on properties. |
+| **[ExcludeFromPresetAttribute](https://docs.unity3d.com/ScriptReference/ExcludeFromPresetAttribute)** | Unsupported❌ | Maybe❓ | ❌ | ❓ | Only valid on classes by default. No effect on properties. Might use to exclude fields from presets? |
+| **[ExecuteAlways](https://docs.unity3d.com/ScriptReference/ExecuteAlways)** | IDK❓ | IDK❓ | ✔️ | ❌ | Requires testing. |
+| **[ExecuteInEditMode](https://docs.unity3d.com/ScriptReference/ExecuteInEditMode)** | IDK❓ | IDK❓ | ✔️ | ❌ | Requires testing. |
+| **[GradientUsageAttribute](https://docs.unity3d.com/ScriptReference/GradientUsageAttribute)** | Unsupported❌ | Supported✔️ | ❌ | ❓ | Only valid on classes by default. No effect on properties. |
+| **[GUITargetAttribute](https://docs.unity3d.com/ScriptReference/GUITargetAttribute)** | Unsupported❌ | Unsupported❌ | ❌ | ❌ | Only valid on methods by default. No effect on properties. |
+| **[HeaderAttribute](https://docs.unity3d.com/ScriptReference/HeaderAttribute)** | Unsupported❌ | Supported✔️ | ❌ | ❓ | Only valid on fields by default. |
+| **[HelpURLAttribute](https://docs.unity3d.com/ScriptReference/HelpURLAttribute)** | Unsupported❌ | Maybe❓ | ❌ | ❓ | Only valid on classes by default. No effect on properties. Might allow? |
+| **[HideInInspector](https://docs.unity3d.com/ScriptReference/HideInInspector)** | Supported✔️ | Supported✔️ | ✔️ | ❓ | - |
+| **[IconAttribute](https://docs.unity3d.com/ScriptReference/IconAttribute)** | Unsupported❌ | Maybe❓ | ❌ | ❓ | Only valid on classes by default. No effect on properties. |
+| **[ImageEffectAfterScale](https://docs.unity3d.com/ScriptReference/ImageEffectAfterScale)** | Unsupported❌ | Supported✔️ | ✔️ | ❓ | No effect on properties. |
+| **[ImageEffectAllowedInSceneView](https://docs.unity3d.com/ScriptReference/ImageEffectAllowedInSceneView)** | Unsupported❌ | Supported✔️ | ✔️ | ❓ | - |
+| **[ImageEffectOpaque](https://docs.unity3d.com/ScriptReference/ImageEffectOpaque)** | Unsupported❌ | Supported✔️ | ✔️ | ❓ | No effect on properties. |
+| **[ImageEffectTransformsToLDR](https://docs.unity3d.com/ScriptReference/ImageEffectTransformsToLDR)** | Unsupported❌ | Supported✔️ | ✔️ | ❓ | - |
+| **[ImageEffectUsesCommandBuffer](https://docs.unity3d.com/ScriptReference/ImageEffectUsesCommandBuffer)** | Unsupported❌ | Supported✔️ | ❌ | ❌ | Only valid on method declarations. |
+| **[InspectorNameAttribute](https://docs.unity3d.com/ScriptReference/InspectorNameAttribute)** | Unsupported❌ | Supported✔️ | ❌ | ❓ | Only valid on fields by default. |
+| **[MinAttribute](https://docs.unity3d.com/ScriptReference/MinAttribute)** | Unsupported❌ | Supported✔️ | ❌ | ❓ | Only valid on fields by default. |
+| **[MultilineAttribute](https://docs.unity3d.com/ScriptReference/MultilineAttribute)** | Unsupported❌ | Supported✔️ | ❌ | ❓ | Only valid on fields by default. |
+| **[NonReorderableAttribute](https://docs.unity3d.com/ScriptReference/NonReorderableAttribute)** | Unsupported❌ | Supported✔️ | ❌ | ❓ | Only valid on fields by default. |
+| **[PreferBinarySerialization](https://docs.unity3d.com/ScriptReference/PreferBinarySerialization)** | Unsupported❌ | Maybe❓ | ❌ | Not | Only valid on classes by default. No effect on properties. Use to change internally from string/JSON representation to binary? |
+| **[PropertyAttribute](https://docs.unity3d.com/ScriptReference/PropertyAttribute)** | Unsupported❌ | Unsupported❌ | ❌ | ❌ | Abstract base class. No effect on properties. |
+| **[RangeAttribute](https://docs.unity3d.com/ScriptReference/RangeAttribute)** | Unsupported❌ | Supported✔️ | ❌ | ❓ | Only valid on fields by default. |
+| **[RequireComponent](https://docs.unity3d.com/ScriptReference/RequireComponent)** | Unsupported❌ | Maybe❓ | ❌ | ❓ | Only valid on classes by default. No effect on properties. Use to ensure prop is always in valid state? Won't have original effect. |
+| **[RPC](https://docs.unity3d.com/ScriptReference/RPC)** | Unsupported❌ | Unsupported❌ | ❌ | ❌ | DEPRECATED BY UNITY. |
+| **[RuntimeInitializeOnLoadMethodAttribute](https://docs.unity3d.com/ScriptReference/RuntimeInitializeOnLoadMethodAttribute)** | Unsupported❌ | Maybe❓ | ❌ | ❓ | Only valid on methods by default. No effect on properties. I'll have to see, but probably not; this functionality is probably best achieved through MonoBehaviour.Awake. |
+| **[SelectionBaseAttribute](https://docs.unity3d.com/ScriptReference/SelectionBaseAttribute)** | Unsupported❌ | Unsupported❌ | ❌ | ❌ | Only valid on classes by default. No effect on properties. |
+| **[SerializeField](https://docs.unity3d.com/ScriptReference/SerializeField)** | Unsupported❌ | Maybe❓ | ✔️ | ❓ | Might be used as an alternative way of marking properties that should be serialized. We'll see. |
+| **[SerializeReference](https://docs.unity3d.com/ScriptReference/SerializeReference)** | Unsupported❌ | Maybe❓ | ❌ | ❓ | Only valid on fields by default. No effect on properties. Might cause problems, I'll have to see. |
+| **[SharedBetweenAnimatorsAttribute](https://docs.unity3d.com/ScriptReference/SharedBetweenAnimatorsAttribute)** | Unsupported❌ | Unsupported❌ | ❌ | ❌ | Only valid on classes by default. No effect on properties. |
+| **[SpaceAttribute](https://docs.unity3d.com/ScriptReference/SpaceAttribute)** | Supported✔️ | Supported✔️ | ❌ | ✔️ | Only valid on fields by default. |
+| **[TextAreaAttribute](https://docs.unity3d.com/ScriptReference/TextAreaAttribute)** | Unsupported❌ | Supported✔️ | ❌ | ❓ | Only valid on fields by default. |
+| **[TooltipAttribute](https://docs.unity3d.com/ScriptReference/TooltipAttribute)** | Supported✔️ | Supported✔️ | ✔️ | ❓ | - |
+| **[UnityAPICompatibilityVersionAttribute](https://docs.unity3d.com/ScriptReference/UnityAPICompatibilityVersionAttribute)** | Unsupported❌ | Unsupported❌ | ❌ | ❌ | Only valid on assemblies by default. No effect on properties. |
+
+Note: The *Allowed on Properties Directly* column was tested on version 2021.3.4f1. Things might have changed since then. For the best compatibility, if there is a workaround listed, I'd recommend using that instead.
+
+To use attributes marked as *Supported* in the *Support Status* column, follow the table below.
+
+| Allowed on Properties Directly | Allowed on Properties Using Workaround | How to use |
+| :---: | :---: | --- |
+| ✔️ | ❌ | Place the attribute on the property just like you would on a field. |
+| ❌ | ✔️ | Prepend the attribute with `JMor.Utility.Inspector.Alias.` like this: `[JMor.Utility.Inspector.Alias.AttributeName]`. This will use an alias class in the `JMor.Utility.Inspector.Alias` namespace. I'd recommend using an alias for the namespace (e.g. `using PIA = JMor.Utility.Inspector.Alias;`) to keep it from bloating the attribute (e.g. `[PIA.AttributeName]`). |
+| ✔️ | ✔️ | Either previously mention method will work. I'd recommend using this aliases, as those are less likely to change between Unity releases. |
+| ❌ | ❌ | This is completely unsupported. |
+
+If something says it's unsupported, but you can put it on a property without causing a compiler error, it will most likely just fail silently (both with and without the `PropertyInspectorObject`). It's also possible that it will just work. That being said, it's more likely that it will noisily fail, and it's possible it'll completely break things (but probably not). I'd recommend not using anything not listed as currently supported above, as I test those myself.
+
 ### Troubleshooting
 If used carelessly, this has a very real potential to wreak havoc on your variables. The limitations are not tips, please consider them. If something seems wrong, or you'd just like more insight, there is debug info.
 
@@ -121,7 +189,6 @@ To remove them all, right-click and deselect the "Toggle Debug" option.
 
 ## Limitations
 
-* Currently, the only way to modify values affected by the property in the inspector is using the property. Otherwise they will get overwritten by the property.
 * Currently, only properties w/ getters and setters work.
 * The way this works is by serializing the property's getter output, putting that in the inspector, serializing and storing changes to that value in the inspector, and deserializing the value and passing it the property's setter. This happens frequently. As a result, properties that don't directly correspond to a value can fail catastrophically (e.g. a property that adds to its associated data instead of directly assigning it will have any change happen again and again). Be very careful of what your property does before putting it in the inspector. If you see crazy, unexplained behavior after adding this to a class, take a close look at how your property assigns and retrieves data.
 
