@@ -118,7 +118,7 @@ Legend:
 | Attribute | Support Status | Planned Support Status | Allowed on Properties Directly |  Allowed on Properties Using Workaround | Notes |
 | :--- | :---: | :---: | :---: | :---: | :--- |
 | **[AddComponentMenu](https://docs.unity3d.com/ScriptReference/AddComponentMenu)** | Unsupported❌ | Unsupported❌ | ✔️ | ❌ | Only affects classes by default. No effect on properties. |
-| **[AssemblyIsEditorAssembly](https://docs.unity3d.com/ScriptReference/AssemblyIsEditorAssembly)** | Unsupported❌ | Supported✔️ | ❌ | ❌ | Only valid on assemblies by default. No effect on properties. |
+| **[AssemblyIsEditorAssembly](https://docs.unity3d.com/ScriptReference/AssemblyIsEditorAssembly)** | Unsupported❌ | Unsupported❌ | ❌ | ❌ | Only valid on assemblies by default. No effect on properties. |
 | **[BeforeRenderOrderAttribute](https://docs.unity3d.com/ScriptReference/BeforeRenderOrderAttribute)** | Unsupported❌ | Unsupported❌ | ❌ | ❌ | Only valid on methods by default. No effect on properties. |
 | **[ColorUsageAttribute](https://docs.unity3d.com/ScriptReference/ColorUsageAttribute)** | Unsupported❌ | Supported✔️ | ❌ | ❓ | Only valid on fields by default. |
 | **[ContextMenu](https://docs.unity3d.com/ScriptReference/ContextMenu)** | Unsupported❌ | Unsupported❌ | ❌ | ❌ | Only valid on methods by default. No effect on properties. |
@@ -133,7 +133,7 @@ Legend:
 | **[ExecuteInEditMode](https://docs.unity3d.com/ScriptReference/ExecuteInEditMode)** | IDK❓ | IDK❓ | ✔️ | ❌ | Requires testing. |
 | **[GradientUsageAttribute](https://docs.unity3d.com/ScriptReference/GradientUsageAttribute)** | Unsupported❌ | Supported✔️ | ❌ | ❓ | Only valid on classes by default. No effect on properties. |
 | **[GUITargetAttribute](https://docs.unity3d.com/ScriptReference/GUITargetAttribute)** | Unsupported❌ | Unsupported❌ | ❌ | ❌ | Only valid on methods by default. No effect on properties. |
-| **[HeaderAttribute](https://docs.unity3d.com/ScriptReference/HeaderAttribute)** | Unsupported❌ | Supported✔️ | ❌ | ❓ | Only valid on fields by default. |
+| **[HeaderAttribute](https://docs.unity3d.com/ScriptReference/HeaderAttribute)** | Supported✔️ | Supported✔️ | ❌ | ✔️ | Only valid on fields by default. |
 | **[HelpURLAttribute](https://docs.unity3d.com/ScriptReference/HelpURLAttribute)** | Unsupported❌ | Maybe❓ | ❌ | ❓ | Only valid on classes by default. No effect on properties. Might allow? |
 | **[HideInInspector](https://docs.unity3d.com/ScriptReference/HideInInspector)** | Supported✔️ | Supported✔️ | ✔️ | ❓ | - |
 | **[IconAttribute](https://docs.unity3d.com/ScriptReference/IconAttribute)** | Unsupported❌ | Maybe❓ | ❌ | ❓ | Only valid on classes by default. No effect on properties. |
@@ -142,7 +142,7 @@ Legend:
 | **[ImageEffectOpaque](https://docs.unity3d.com/ScriptReference/ImageEffectOpaque)** | Unsupported❌ | Supported✔️ | ✔️ | ❓ | No effect on properties. |
 | **[ImageEffectTransformsToLDR](https://docs.unity3d.com/ScriptReference/ImageEffectTransformsToLDR)** | Unsupported❌ | Supported✔️ | ✔️ | ❓ | - |
 | **[ImageEffectUsesCommandBuffer](https://docs.unity3d.com/ScriptReference/ImageEffectUsesCommandBuffer)** | Unsupported❌ | Supported✔️ | ❌ | ❌ | Only valid on method declarations. |
-| **[InspectorNameAttribute](https://docs.unity3d.com/ScriptReference/InspectorNameAttribute)** | Unsupported❌ | Supported✔️ | ❌ | ❓ | Only valid on fields by default. |
+| **[InspectorNameAttribute](https://docs.unity3d.com/ScriptReference/InspectorNameAttribute)** | Supported✔️ | Supported✔️ | ❌ | ✔️ | Only valid on fields by default. |
 | **[MinAttribute](https://docs.unity3d.com/ScriptReference/MinAttribute)** | Unsupported❌ | Supported✔️ | ❌ | ❓ | Only valid on fields by default. |
 | **[MultilineAttribute](https://docs.unity3d.com/ScriptReference/MultilineAttribute)** | Unsupported❌ | Supported✔️ | ❌ | ❓ | Only valid on fields by default. |
 | **[NonReorderableAttribute](https://docs.unity3d.com/ScriptReference/NonReorderableAttribute)** | Unsupported❌ | Supported✔️ | ❌ | ❓ | Only valid on fields by default. |
@@ -163,16 +163,18 @@ Legend:
 
 Note: The *Allowed on Properties Directly* column was tested on version 2021.3.4f1. Things might have changed since then. For the best compatibility, if there is a workaround listed, I'd recommend using that instead.
 
+Note: All aliases now derived from the type they are aliases of. This makes supporting them easier, as there is no need to specify the derived type. However, if Unity changes the underlying types in some large way (e.g. deleting them outright), these will cease to function.
+
 To use attributes marked as *Supported* in the *Support Status* column, follow the table below.
 
 | Allowed on Properties Directly | Allowed on Properties Using Workaround | How to use |
 | :---: | :---: | --- |
 | ✔️ | ❌ | Place the attribute on the property just like you would on a field. |
 | ❌ | ✔️ | Prepend the attribute with `JMor.Utility.Inspector.Alias.` like this: `[JMor.Utility.Inspector.Alias.AttributeName]`. This will use an alias class in the `JMor.Utility.Inspector.Alias` namespace. I'd recommend using an alias for the namespace (e.g. `using PIA = JMor.Utility.Inspector.Alias;`) to keep it from bloating the attribute (e.g. `[PIA.AttributeName]`). |
-| ✔️ | ✔️ | Either previously mention method will work. I'd recommend using this aliases, as those are less likely to change between Unity releases. |
+| ✔️ | ✔️ | Either previously mentioned method will work. I'd recommend using this aliases, as those are less likely to change between Unity releases. |
 | ❌ | ❌ | This is completely unsupported. |
 
-If something says it's unsupported, but you can put it on a property without causing a compiler error, it will most likely just fail silently (both with and without the `PropertyInspectorObject`). It's also possible that it will just work. That being said, it's more likely that it will noisily fail, and it's possible it'll completely break things (but probably not). I'd recommend not using anything not listed as currently supported above, as I test those myself.
+If something says it's unsupported, but you can put it on a property without causing a compiler error, it will most likely just fail silently (both with and without the `PropertyInspectorObject`). It's also possible that it will just work. That being said, it's more likely that it will noisily fail, and it's possible it'll completely break things (but probably not). I'd recommend not using anything not listed as currently supported above, as I've yet to test those myself.
 
 ### Troubleshooting
 If used carelessly, this has a very real potential to wreak havoc on your variables. The limitations are not tips, please consider them. If something seems wrong, or you'd just like more insight, there is debug info.
@@ -189,7 +191,8 @@ To remove them all, right-click and deselect the "Toggle Debug" option.
 
 ## Limitations
 
-* Currently, only properties w/ getters and setters work.
+* Currently, only properties w/ getters and setters work. This includes auto properties.
 * The way this works is by serializing the property's getter output, putting that in the inspector, serializing and storing changes to that value in the inspector, and deserializing the value and passing it the property's setter. This happens frequently. As a result, properties that don't directly correspond to a value can fail catastrophically (e.g. a property that adds to its associated data instead of directly assigning it will have any change happen again and again). Be very careful of what your property does before putting it in the inspector. If you see crazy, unexplained behavior after adding this to a class, take a close look at how your property assigns and retrieves data.
+* Inspector only updates to match changed property positions/values after interaction. It doesn't break anything, but it's a bit startling (and irritating).
 
 [^1]: Theoretically, if you created a native C++ side for a class and set things up correctly, you could. If you'd like to have fun figuring out how to do that (and if you even can), I wish you the best. For our purposes, you can't.

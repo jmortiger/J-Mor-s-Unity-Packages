@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using PIO = JMor.Utility.Inspector.Alias;
@@ -34,7 +35,7 @@ namespace JMor.Utility.Inspector
 		/// </summary>
 		public List<string> PropertyTypesStored = new List<string>();
 		public List<string> PropertyValues;
-		public /*List<string>*//*string[]*/List<string> newPropertyValues;
+		public List<string> newPropertyValues;
 		public object container;
 		public Type containerType
 		{
@@ -51,10 +52,17 @@ namespace JMor.Utility.Inspector
 			this.container = container;
 			this.containerType = containerType;
 		}
-		public void OnAfterDeserialize()
+		public void OnAfterDeserialize() // TODO: Fix Drawer only updating to match changed property positions/values after interaction
 		{
 			PropertyReflectionData = PropertyReflectionData ?? new List<PropertyInfo>();
 			PropertyNames = PropertyNames ?? new List<string>();
+			for (int i = 0; i < PropertyReflectionData.Count; i++)
+				if (PropertyReflectionData?[0]?.Name != PropertyNames?[0] || 
+					PropertyReflectionData?[0]?.PropertyType != PropertyTypes?[0])
+				{
+					RebuildLists();
+					break;
+				}
 			PropertyTypes = PropertyTypes ?? new List<Type>();
 			PropertyValues = PropertyValues ?? new List<string>();
 			newPropertyValues = newPropertyValues ?? new List<string>(PropertyValues.Count);
@@ -73,6 +81,69 @@ namespace JMor.Utility.Inspector
 				}
 		}
 
+		public void RebuildLists() {
+			if (containerType == null || container == null)
+			{
+				Debug.LogWarning($"Not initialized ({(containerType == null ? "type" : "")}{(containerType == null && container == null ? " and " : "")}{(container == null ? "container" : "")} = null), canceling serialization (OnBeforeSerialize)");
+				return;
+			}
+			var props = containerType.GetProperties(
+				BindingFlags.Public |
+				BindingFlags.NonPublic |
+				BindingFlags.Instance);
+			PropertyReflectionData = /*PropertyReflectionData ?? */new List<PropertyInfo>();
+			PropertyNames = /*PropertyNames ?? */new List<string>();
+			PropertyTypes = /*PropertyTypes ?? */new List<Type>();
+			PropertyValues = /*PropertyValues ?? */new List<string>();
+			newPropertyValues = new List<string>(PropertyValues.Count);
+			PropertyValues.ForEach(e => newPropertyValues.Add(""));
+			for (int i = 0; i < props.Length; i++)
+			{
+				void UpdateArrays(int ind)
+				{
+					if (ind < 0)
+					{
+						PropertyNames.Add(props[i].Name);
+						PropertyTypesStored.Add(props[i].PropertyType.AssemblyQualifiedName);
+						PropertyValues.Add(
+							(IsLoneValueType(props[i].PropertyType)) ?
+								props[i].GetValue(Convert.ChangeType(container, containerType)).ToString() :
+								JsonUtility.ToJson(props[i].GetValue(Convert.ChangeType(container, containerType))));
+						newPropertyValues.Add("");
+					}
+					else
+					{
+						PropertyNames[ind] = props[i].Name;
+						PropertyTypesStored[ind] = props[i].PropertyType.AssemblyQualifiedName;
+						PropertyValues[ind] = (
+							(IsLoneValueType(props[i].PropertyType)) ?
+								props[i].GetValue(Convert.ChangeType(container, containerType)).ToString() :
+								JsonUtility.ToJson(props[i].GetValue(Convert.ChangeType(container, containerType))));
+					}
+				}
+				bool isInspected = props[i].GetCustomAttribute<PropertyInspectorAttribute>() != null;
+
+				if (isInspected)
+				{
+					if (!PropertyReflectionData.Contains(props[i]))
+						PropertyReflectionData.Add(props[i]);
+					UpdateArrays(PropertyNames.IndexOf(props[i].Name));
+				}
+				else if (!isInspected && PropertyReflectionData.Contains(props[i]))
+				{
+					PropertyReflectionData.Remove(props[i]);
+					var ind = PropertyNames.IndexOf(props[i].Name);
+					if (ind >= 0)
+					{
+						PropertyNames.RemoveAt(ind);
+						PropertyTypesStored.RemoveAt(ind);
+						PropertyValues.RemoveAt(ind);
+						newPropertyValues.RemoveAt(ind);
+					}
+				}
+			}
+		}
+
 		public void OnBeforeSerialize()
 		{
 			if (containerType == null || container == null)
@@ -88,8 +159,8 @@ namespace JMor.Utility.Inspector
 			PropertyNames = PropertyNames ?? new List<string>();
 			PropertyTypes = PropertyTypes ?? new List<Type>();
 			PropertyValues = PropertyValues ?? new List<string>();
-			newPropertyValues = /*newPropertyValues ?? */new List<string>(PropertyValues.Count);
-			PropertyValues.ForEach(e => newPropertyValues.Add(/*e*/""));
+			newPropertyValues = new List<string>(PropertyValues.Count);
+			PropertyValues.ForEach(e => newPropertyValues.Add(""));
 			for (int i = 0; i < props.Length; i++)
 			{
 				void UpdateArrays(int ind)
@@ -102,7 +173,7 @@ namespace JMor.Utility.Inspector
 							(IsLoneValueType(props[i].PropertyType)) ?
 								props[i].GetValue(Convert.ChangeType(container, containerType)).ToString() :
 								JsonUtility.ToJson(props[i].GetValue(Convert.ChangeType(container, containerType))));
-						newPropertyValues.Add(/*PropertyValues[^1]*/"");
+						newPropertyValues.Add("");
 					}
 					else
 					{
@@ -112,7 +183,6 @@ namespace JMor.Utility.Inspector
 							(IsLoneValueType(props[i].PropertyType)) ?
 								props[i].GetValue(Convert.ChangeType(container, containerType)).ToString() :
 								JsonUtility.ToJson(props[i].GetValue(Convert.ChangeType(container, containerType))));
-						// newPropertyValues.Add(/*PropertyValues[ind]*/"");
 					}
 				}
 				bool isInspected = props[i].GetCustomAttribute<PropertyInspectorAttribute>() != null;
@@ -139,21 +209,103 @@ namespace JMor.Utility.Inspector
 		}
 		#region Get Attribute Info
 #nullable enable
+		public static bool IsOrderImportant<T>() where T : PropertyAttribute =>
+			typeof(T) == typeof(PIO.SpaceAttribute) ||
+			typeof(T) == typeof(SpaceAttribute) ||
+			typeof(T) == typeof(PIO.HeaderAttribute) ||
+			typeof(T) == typeof(HeaderAttribute);
+		public static bool IsOrderImportant(Type t) => 
+			t == typeof(PIO.SpaceAttribute) ||
+			t == typeof(SpaceAttribute) ||
+			t == typeof(PIO.HeaderAttribute) ||
+			t == typeof(HeaderAttribute);
+		public static PropertyAttribute[] GetOrderImportantAttributes(PropertyAttribute[]? input) => input
+			?.Where<PropertyAttribute>(v => IsOrderImportant(v.GetType()))
+			?.ToArray<PropertyAttribute>() ?? new PropertyAttribute[0];
+		public static PropertyAttribute[] GetOrderedAttributes(PropertyAttribute[]? input)
+		{
+			var output = GetOrderImportantAttributes(input);
+			int[] orders = new int[output.Length];
+			for (int i = 0; i < output.Length; i++)
+				orders[i] = output[i].order;
+			Array.Sort(orders, output);
+			return output;
+		}
+		public PropertyAttribute[] GetOrderedAttributes(int index) => GetOrderedAttributes(PropertyNames[index]);
+		public PropertyAttribute[] GetOrderedAttributes(string propertyName) => GetOrderedAttributes(GetUnityEngineAttributes(propertyName));
 		#region Shorthand
 		public string? GetTooltip(int index) => GetTooltip(PropertyNames[index]);
 		public string? GetTooltip(string propertyName)
 		{
-			PropertyInfo? p = containerType.GetProperty(propertyName,
+			PropertyInfo? p = containerType?.GetProperty(propertyName,
 				BindingFlags.Public |
 				BindingFlags.NonPublic |
 				BindingFlags.Instance);
 			var tooltip = p?.GetCustomAttribute<TooltipAttribute>();
 			return tooltip?.tooltip;
 		}
+		public string GetInspectorName(int index) => GetInspectorName(PropertyNames[index]);
+		public string GetInspectorName(string propertyName)
+		{
+			PropertyInfo? p = containerType?.GetProperty(propertyName,
+				BindingFlags.Public |
+				BindingFlags.NonPublic |
+				BindingFlags.Instance);
+			return p?.GetCustomAttribute<PIO.InspectorNameAttribute>()?.displayName ?? propertyName;
+		}
+		public string GetHeaderText(int index) => GetHeaderText(PropertyNames[index]);
+		public string GetHeaderText(string propertyName)
+		{
+			PropertyInfo? p = containerType?.GetProperty(propertyName,
+				BindingFlags.Public |
+				BindingFlags.NonPublic |
+				BindingFlags.Instance);
+			return p?.GetCustomAttribute<PIO.HeaderAttribute>()?.header ?? "";
+		}
+		public HeaderAttribute[] GetAllHeaders()
+		{
+			PropertyInfo[]? p = containerType?.GetProperties(
+				BindingFlags.Public |
+				BindingFlags.NonPublic |
+				BindingFlags.Instance);
+			var output = new List<HeaderAttribute>();
+			for (int i = 0; p != null && i < p?.Length; i++)
+				foreach (var a in 
+					p?[i]?.GetCustomAttributes<HeaderAttribute>()?.ToArray<HeaderAttribute>() ?? 
+					new HeaderAttribute[0])
+					output.Add(a);
+			return output.ToArray<HeaderAttribute>();
+		}
+		public string[] GetAllHeaderTexts()
+		{
+			var output = new List<string>();
+			foreach (var h in GetAllHeaders())
+				output.Add(h.header);
+			return output.ToArray<string>();
+		}
+		public HeaderAttribute[] GetHeaders(int index) => GetHeaders(PropertyNames[index]);
+		public HeaderAttribute[] GetHeaders(string propertyName)
+		{
+			PropertyInfo? p = containerType?.GetProperty(propertyName,
+				BindingFlags.Public |
+				BindingFlags.NonPublic |
+				BindingFlags.Instance);
+			return 
+				p?.GetCustomAttributes<HeaderAttribute>()?.ToArray<HeaderAttribute>() ?? 
+				new HeaderAttribute[0];
+		}
+		public string[] GetHeaderTexts(int index) => GetHeaderTexts(PropertyNames[index]);
+		public string[] GetHeaderTexts(string propertyName)
+		{
+			var output = new List<string>();
+			foreach (var h in GetHeaders(propertyName))
+				output.Add(h.header);
+			return output.ToArray<string>();
+		}
 		public float GetSpace(int index) => GetSpace(PropertyNames[index]);
 		public float GetSpace(string propertyName)
 		{
-			PropertyInfo? p = containerType.GetProperty(propertyName,
+			PropertyInfo? p = containerType?.GetProperty(propertyName,
 				BindingFlags.Public |
 				BindingFlags.NonPublic |
 				BindingFlags.Instance);
@@ -161,7 +313,7 @@ namespace JMor.Utility.Inspector
 		}
 		public int GetNumSpaces()
 		{
-			PropertyInfo[]? p = containerType.GetProperties(
+			PropertyInfo[]? p = containerType?.GetProperties(
 				BindingFlags.Public |
 				BindingFlags.NonPublic |
 				BindingFlags.Instance);
@@ -173,29 +325,60 @@ namespace JMor.Utility.Inspector
 		}
 		public float GetTotalAddedSpaceFromSpaceAttributes()
 		{
-			PropertyInfo[]? p = containerType.GetProperties(
+			PropertyInfo[]? p = containerType?.GetProperties(
 				BindingFlags.Public |
 				BindingFlags.NonPublic |
 				BindingFlags.Instance);
 			float num = 0;
 			for (int i = 0; p != null && i < p?.Length; i++)
-				num += p?[i]?.GetCustomAttribute<PIO.SpaceAttribute>()?.height ?? 0;
+				//num += p?[i]?.GetCustomAttribute<PIO.SpaceAttribute>()?.height ?? 0;
+				foreach (var a in p?[i]?.GetCustomAttributes<PIO.SpaceAttribute>() ?? new PIO.SpaceAttribute[0])
+					num += a?.height ?? 0;
 			return num;
 		}
 		#endregion
+		#region Concrete
+		// For find and replace, replace "UnityEngine"
+		/*public UnityEngine? GetUnityEngineAttribute(int index) => GetUnityEngineAttribute(PropertyNames[index]);
+		public UnityEngine? GetUnityEngineAttribute(string propertyName)
+		{
+			PropertyInfo? p = containerType?.GetProperty(propertyName,
+				BindingFlags.Public |
+				BindingFlags.NonPublic |
+				BindingFlags.Instance);
+			return p?.GetCustomAttribute<UnityEngine>();
+		}
+		public UnityEngine[]? GetUnityEngineAttributes(int index) => GetUnityEngineAttributes(PropertyNames[index]);
+		public UnityEngine[]? GetUnityEngineAttributes(string propertyName)
+		{
+			PropertyInfo? p = containerType?.GetProperty(propertyName,
+				BindingFlags.Public |
+				BindingFlags.NonPublic |
+				BindingFlags.Instance);
+			return (UnityEngine[])(p?.GetCustomAttributes<UnityEngine>() ?? new UnityEngine[0]);
+		}*/
 		public PIO.SpaceAttribute? GetSpaceAttribute(int index) => GetSpaceAttribute(PropertyNames[index]);
 		public PIO.SpaceAttribute? GetSpaceAttribute(string propertyName)
 		{
-			PropertyInfo? p = containerType.GetProperty(propertyName,
+			PropertyInfo? p = containerType?.GetProperty(propertyName,
 				BindingFlags.Public |
 				BindingFlags.NonPublic |
 				BindingFlags.Instance);
 			return p?.GetCustomAttribute<PIO.SpaceAttribute>();
 		}
+		public PIO.SpaceAttribute[]? GetSpaceAttributes(int index) => GetSpaceAttributes(PropertyNames[index]);
+		public PIO.SpaceAttribute[]? GetSpaceAttributes(string propertyName)
+		{
+			PropertyInfo? p = containerType?.GetProperty(propertyName,
+				BindingFlags.Public |
+				BindingFlags.NonPublic |
+				BindingFlags.Instance);
+			return (PIO.SpaceAttribute[])(p?.GetCustomAttributes<PIO.SpaceAttribute>() ?? new PIO.SpaceAttribute[0]);
+		}
 		public TooltipAttribute? GetTooltipAttribute(int index) => GetTooltipAttribute(PropertyNames[index]);
 		public TooltipAttribute? GetTooltipAttribute(string propertyName)
 		{
-			PropertyInfo? p = containerType.GetProperty(propertyName,
+			PropertyInfo? p = containerType?.GetProperty(propertyName,
 				BindingFlags.Public |
 				BindingFlags.NonPublic |
 				BindingFlags.Instance);
@@ -204,7 +387,7 @@ namespace JMor.Utility.Inspector
 		public HideInInspector? GetHideInInspectorAttribute(int index) => GetHideInInspectorAttribute(PropertyNames[index]);
 		public HideInInspector? GetHideInInspectorAttribute(string propertyName)
 		{
-			PropertyInfo? p = containerType.GetProperty(propertyName,
+			PropertyInfo? p = containerType?.GetProperty(propertyName,
 				BindingFlags.Public |
 				BindingFlags.NonPublic |
 				BindingFlags.Instance);
@@ -213,7 +396,7 @@ namespace JMor.Utility.Inspector
 		public ImageEffectAfterScale? GetImageEffectAfterScaleAttribute(int index) => GetImageEffectAfterScaleAttribute(PropertyNames[index]);
 		public ImageEffectAfterScale? GetImageEffectAfterScaleAttribute(string propertyName)
 		{
-			PropertyInfo? p = containerType.GetProperty(propertyName,
+			PropertyInfo? p = containerType?.GetProperty(propertyName,
 				BindingFlags.Public |
 				BindingFlags.NonPublic |
 				BindingFlags.Instance);
@@ -222,31 +405,40 @@ namespace JMor.Utility.Inspector
 		public ImageEffectAllowedInSceneView? GetImageEffectAllowedInSceneViewAttribute(int index) => GetImageEffectAllowedInSceneViewAttribute(PropertyNames[index]);
 		public ImageEffectAllowedInSceneView? GetImageEffectAllowedInSceneViewAttribute(string propertyName)
 		{
-			PropertyInfo? p = containerType.GetProperty(propertyName,
+			PropertyInfo? p = containerType?.GetProperty(propertyName,
 				BindingFlags.Public |
 				BindingFlags.NonPublic |
 				BindingFlags.Instance);
 			return p?.GetCustomAttribute<ImageEffectAllowedInSceneView>();
 		}
+		#endregion
 		public T? GetUnityEngineAttribute<T>(int index) where T : Attribute => GetUnityEngineAttribute<T>(PropertyNames[index]);
 		public T? GetUnityEngineAttribute<T>(string propertyName) where T : Attribute
 		{
-			PropertyInfo? p = containerType.GetProperty(propertyName,
+			PropertyInfo? p = containerType?.GetProperty(propertyName,
 				BindingFlags.Public |
 				BindingFlags.NonPublic |
 				BindingFlags.Instance);
 			return p?.GetCustomAttribute<T>();
 		}
-		// For find and replace, replace "UnityEngine"
-		/*public UnityEngine? GetUnityEngineAttribute(int index) => GetUnityEngineAttribute(PropertyNames[index]);
-		public UnityEngine? GetUnityEngineAttribute(string propertyName)
+		public T[]? GetUnityEngineAttributes<T>(int index) where T : Attribute => GetUnityEngineAttributes<T>(PropertyNames[index]);
+		public T[]? GetUnityEngineAttributes<T>(string propertyName) where T : Attribute
 		{
-			PropertyInfo? p = containerType.GetProperty(propertyName,
+			PropertyInfo? p = containerType?.GetProperty(propertyName,
 				BindingFlags.Public |
 				BindingFlags.NonPublic |
 				BindingFlags.Instance);
-			return p?.GetCustomAttribute<UnityEngine>();
-		}*/
+			return (T[])(p?.GetCustomAttributes<T>() ?? new T[0]);
+		}
+		public PropertyAttribute[] GetUnityEngineAttributes(int index) => GetUnityEngineAttributes<PropertyAttribute>(PropertyNames[index]) ?? new PropertyAttribute[0];
+		public PropertyAttribute[] GetUnityEngineAttributes(string propertyName)
+		{
+			PropertyInfo? p = containerType?.GetProperty(propertyName,
+				BindingFlags.Public |
+				BindingFlags.NonPublic |
+				BindingFlags.Instance);
+			return (PropertyAttribute[])(p?.GetCustomAttributes<PropertyAttribute>() ?? new PropertyAttribute[0]);
+		}
 #nullable restore
 		#endregion
 
