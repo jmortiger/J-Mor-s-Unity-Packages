@@ -35,6 +35,17 @@ namespace JMor.Utility.Inspector
 		/// </summary>
 		public List<string> PropertyTypesStored = new List<string>();
 		public List<string> PropertyValues;
+		public List<string> cachedPropertyNames = new List<string>();
+		/// <summary>
+		/// <see cref="Type"/> can't be serialized, so we use this for serialization of <see cref="cachedPropertyTypesStored"/>.
+		/// </summary>
+		public List<Type> cachedPropertyTypes
+		{
+			get => PropertyTypesStored == null ? null : PropertyTypesStored.ConvertAll<Type>(s => Type.GetType(s));
+			set => PropertyTypesStored = value == null ? null : value.ConvertAll<string>(t => t.AssemblyQualifiedName);
+		}
+		public List<string> cachedPropertyTypesStored = new List<string>();
+		public List<string> cachedPropertyValues = new List<string>();
 		public List<string> newPropertyValues;
 		public object container;
 		public Type containerType
@@ -82,9 +93,12 @@ namespace JMor.Utility.Inspector
 		}
 
 		public void RebuildLists() {
+			cachedPropertyNames = PropertyNames;
+			cachedPropertyTypes = PropertyTypes;
+			cachedPropertyValues = PropertyValues;
 			if (containerType == null || container == null)
 			{
-				Debug.LogWarning($"Not initialized ({(containerType == null ? "type" : "")}{(containerType == null && container == null ? " and " : "")}{(container == null ? "container" : "")} = null), canceling serialization (OnBeforeSerialize)");
+				Debug.LogWarning($"Not initialized ({(containerType == null ? "type" : "")}{(containerType == null && container == null ? " and " : "")}{(container == null ? "container" : "")} = null), canceling List rebuild");
 				return;
 			}
 			var props = containerType.GetProperties(

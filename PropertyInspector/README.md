@@ -160,6 +160,7 @@ Legend:
 | **[TextAreaAttribute](https://docs.unity3d.com/ScriptReference/TextAreaAttribute)** | Unsupported❌ | Supported✔️ | ❌ | ❓ | Only valid on fields by default. |
 | **[TooltipAttribute](https://docs.unity3d.com/ScriptReference/TooltipAttribute)** | Supported✔️ | Supported✔️ | ✔️ | ❓ | - |
 | **[UnityAPICompatibilityVersionAttribute](https://docs.unity3d.com/ScriptReference/UnityAPICompatibilityVersionAttribute)** | Unsupported❌ | Unsupported❌ | ❌ | ❌ | Only valid on assemblies by default. No effect on properties. |
+| **[FormerlySerializedAsAttribute](https://docs.unity3d.com/ScriptReference/Serialization.FormerlySerializedAsAttribute.html)** | Unsupported❌ | Supported✔️ | ❓ | ❌ | - |
 
 Note: The *Allowed on Properties Directly* column was tested on version 2021.3.4f1. Things might have changed since then. For the best compatibility, if there is a workaround listed, I'd recommend using that instead.
 
