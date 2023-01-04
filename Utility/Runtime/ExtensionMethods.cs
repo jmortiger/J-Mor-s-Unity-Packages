@@ -104,14 +104,14 @@ namespace JMor.Utility
 		/// 
 		/// </summary>
 		/// <typeparam name="T">
-		/// An enum where the names of all the values DIRECTLY corrospond 
+		/// An enum where the names of all the values DIRECTLY correspond 
 		/// to the name of an <see cref="InputAction.name"/>.
 		/// </typeparam>
 		/// <param name="input"></param>
 		/// <param name="actionName"></param>
 		/// <returns></returns>
 		/// <remarks>
-		/// This method requires an enum where the names of all the values DIRECTLY corrospond 
+		/// This method requires an enum where the names of all the values DIRECTLY correspond 
 		/// to the name of an <see cref="InputAction.name"/>. As such, InputActions must have names representable 
 		/// in code (i.e. no spaces, certain special characters, etc).
 		/// </remarks>
@@ -120,14 +120,14 @@ namespace JMor.Utility
 		/// 
 		/// </summary>
 		/// <typeparam name="T">
-		/// An enum where the names of all the values DIRECTLY corrospond 
+		/// An enum where the names of all the values DIRECTLY correspond 
 		/// to the name of an <see cref="InputAction.name"/>.
 		/// </typeparam>
 		/// <param name="input"></param>
 		/// <param name="actionName"></param>
 		/// <returns></returns>
 		/// <remarks>
-		/// This method requires an enum where the names of all the values DIRECTLY corrospond 
+		/// This method requires an enum where the names of all the values DIRECTLY correspond 
 		/// to the name of an <see cref="InputAction.name"/>. As such, InputActions must have names representable 
 		/// in code (i.e. no spaces, certain special characters, etc).
 		/// </remarks>
@@ -136,14 +136,14 @@ namespace JMor.Utility
 		/// 
 		/// </summary>
 		/// <typeparam name="T">
-		/// An enum where the names of all the values DIRECTLY corrospond 
+		/// An enum where the names of all the values DIRECTLY correspond 
 		/// to the name of an <see cref="InputAction.name"/>.
 		/// </typeparam>
 		/// <param name="input"></param>
 		/// <param name="actionName"></param>
 		/// <returns></returns>
 		/// <remarks>
-		/// This method requires an enum where the names of all the values DIRECTLY corrospond 
+		/// This method requires an enum where the names of all the values DIRECTLY correspond 
 		/// to the name of an <see cref="InputAction.name"/>. As such, InputActions must have names representable 
 		/// in code (i.e. no spaces, certain special characters, etc).
 		/// </remarks>
@@ -152,14 +152,14 @@ namespace JMor.Utility
 		/// 
 		/// </summary>
 		/// <typeparam name="T">
-		/// An enum where the names of all the values DIRECTLY corrospond 
+		/// An enum where the names of all the values DIRECTLY correspond 
 		/// to the name of an <see cref="InputAction.name"/>.
 		/// </typeparam>
 		/// <param name="input"></param>
 		/// <param name="actionName"></param>
 		/// <returns></returns>
 		/// <remarks>
-		/// This method requires an enum where the names of all the values DIRECTLY corrospond 
+		/// This method requires an enum where the names of all the values DIRECTLY correspond 
 		/// to the name of an <see cref="InputAction.name"/>. As such, InputActions must have names representable 
 		/// in code (i.e. no spaces, certain special characters, etc).
 		/// </remarks>
@@ -204,7 +204,7 @@ namespace JMor.Utility
 		}
 		#endregion
 
-		#region Array manip
+		#region Array Manipulation
 		#region SlideDown
 		/// <summary>
 		/// i.e. the element at source[0] is moved to source[0+indexesToSlideDown], etc.
@@ -291,7 +291,7 @@ namespace JMor.Utility
 		public static bool IsValid(this float value, float minInclusive = float.MinValue, float maxInclusive = float.MaxValue) => float.IsFinite(value) && value >= minInclusive && value <= maxInclusive ? true : false;
 		#endregion
 
-		#region Floating Point Comparision
+		#region Floating Point Comparison
 		// TODO: Unit Test the following 2. This concerns me https://roundwide.com/equality-comparison-of-floating-point-numbers-in-csharp/. Adapted from https://stackoverflow.com/a/3875619/9819929
 		public static bool Approximately(this double a, double b, double epsilon = 2.2250738585072014E-308d/*1E-10d*//*double.Epsilon*/)
 		{
@@ -370,8 +370,10 @@ namespace JMor.Utility
 		public static bool IsInRange(this float value, float min, float max) => value > min && value < max/* || value < min && value > max*/;
 		public static bool IsInRange(this float value, Vector2 range) => value > range.x && value < range.y || value < range.x && value > range.y;
 
+		#region Casting
 		public static T As<T>(this object o) where T : class => (T)o;
 		public static T To<T>(this object o) where T : class => (T)o;
+		#endregion
 		#endregion
 	}
 }

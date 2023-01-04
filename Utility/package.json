@@ -1,6 +1,6 @@
 {
 	"name": "com.jmor.utility",
-	"version": "2.0.0",
+	"version": "2.1.0",
 	"displayName": "J Mor's Utilities",
 	"unity": "2021.3",
 	"unityRelease": "4f1",
@@ -10,6 +10,8 @@
 		"url": "https://jgm-edu.github.io/"
 	},
 	"keywords": [
+		"utilities",
+		"utility",
 		"jmor",
 		"j mor"
 	],

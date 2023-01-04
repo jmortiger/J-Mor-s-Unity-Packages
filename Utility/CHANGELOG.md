@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+
+## [2.0.1] - 2023-1-3
+### Added
+- Added `Util` class for non-math, non-extension methods.
+- Added `GetMemberName` & related methods to help me make code more resilient to refactoring.
+
 ## [2.0.0] - 2023-1-2
 ### Added
 - Added [PIDController](https://en.wikipedia.org/wiki/PID_controller) for self-correcting smooth adjustments to an output value based on a desired value. - 2022-12-11
