@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -214,6 +215,7 @@ namespace JMor.Utility
 		/// <param name="defaultValue"></param>
 		/// <param name="output"></param>
 		/// <param name="indexesToSlideDown"></param>
+        /// <exception cref="ArgumentException"></exception>
 		public static void SlideElementsDown<T>(this T[] source, T defaultValue, out T[] output, uint indexesToSlideDown = 1)
 		{
 			if (indexesToSlideDown > source.Length)
@@ -222,13 +224,7 @@ namespace JMor.Utility
 			for (int i = source.Length - 1; i >= 0; i--)
 				output[i] = (i - indexesToSlideDown < 0) ? defaultValue : source[i - indexesToSlideDown];
 		}
-		/// <summary>
-		/// i.e. the element at source[0] is moved to source[0+indexesToSlideDown], etc.
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="source"></param>
-		/// <param name="defaultValue"></param>
-		/// <param name="indexesToSlideDown"></param>
+		/// <inheritdoc cref="SlideElementsDown{T}(T[], T, out T[], uint)"/>
 		public static void SlideElementsDown<T>(this T[] source, T defaultValue, uint indexesToSlideDown = 1)
 		{
 			if (indexesToSlideDown > source.Length)
@@ -275,6 +271,86 @@ namespace JMor.Utility
 		//	source = t;
 		//}
 		#endregion
+		#region Filter
+		/// <summary>
+        /// Filters elements out of the array based on the given function.
+        /// </summary>
+        /// <typeparam name="T">The type of the array.</typeparam>
+        /// <param name="source">The starting array to filter from.</param>
+        /// <param name="predicate">The filtering function. If the value for an element evaluates to true, it will be included in the resultant array.</param>
+        /// <param name="output">The new array of filtered elements.</param>
+        /// <returns>The length of the new <paramref name="output"/> array.</returns>
+        /// <exception cref="ArgumentNullException">If <paramref name="source"/> or <paramref name="predicate"/> are null.</exception>
+		public static int Filter<T>(this T[] source, Predicate<T> predicate, out T[] output) {
+			if (source == null || predicate == null) throw new ArgumentNullException();
+			output = source.Where(t => predicate(t)).ToArray();
+			return output.Length;
+		}
+		/// <inheritdoc cref="Filter{T}(T[], Predicate{T}, out T[])"/>
+		public static int Filter<T>(this T[] source, Func<T, bool> predicate, out T[] output) {
+			if (source == null || predicate == null) throw new ArgumentNullException();
+			output = source.Where(predicate).ToArray();
+			return output.Length;
+		}
+		/// <summary>
+        /// <inheritdoc cref="Filter{T}(T[], Predicate{T}, out T[])"/> Mutates the given array.
+        /// </summary>
+        /// <param name="source">The array to filter. This will be mutated by this function.</param>
+        /// <returns>The new length of <paramref name="source"/>.</returns>
+        /// <inheritdoc cref="Filter{T}(T[], Predicate{T}, out T[])"/>
+		public static int Filter<T>(this T[] source, Predicate<T> predicate) {
+			if (source == null || predicate == null) throw new ArgumentNullException();
+			source = source.Where(t => predicate(t)).ToArray();
+			return source.Length;
+		}
+		/// <inheritdoc cref="Filter{T}(T[], Predicate{T})"/>
+		public static int Filter<T>(this T[] source, Func<T, bool> predicate) {
+			if (source == null || predicate == null) throw new ArgumentNullException();
+			source = source.Where(predicate).ToArray();
+			return source.Length;
+		}
+		#endregion
+		#region Sort
+		// TODO: Implement Alias for Array.Sort
+		// /// <summary>
+        // /// Sorts the elements in the array.
+        // /// </summary>
+        // /// <typeparam name="T">The type of the array.</typeparam>
+        // /// <param name="source">The starting array to filter from.</param>
+        // /// <param name="predicate">The filtering function. If the value for an element evaluates to true, it will be included in the resultant array.</param>
+        // /// <param name="output">The new array of filtered elements.</param>
+        // /// <returns>The length of the new <paramref name="output"/> array.</returns>
+        // /// <exception cref="ArgumentNullException">If <paramref name="source"/> or <paramref name="predicate"/> are null.</exception>
+		// public static T[] Sort<T>(this T[] source, Predicate<T> predicate, out T[] output) {
+		// 	if (source == null || predicate == null) throw new ArgumentNullException();
+		// 	output = source.Where(t => predicate(t)).ToArray();
+		// 	return output;
+		// }
+		// /// <inheritdoc cref="Sort{T}(T[], Predicate{T}, out T[])"/>
+		// public static T[] Sort<T>(this T[] source, Func<T, bool> predicate, out T[] output) {
+		// 	if (source == null || predicate == null) throw new ArgumentNullException();
+		// 	output = source.Where(predicate).ToArray();
+		// 	return output;
+		// }
+		// /// <summary>
+        // /// <inheritdoc cref="Sort{T}(T[], Predicate{T}, out T[])"/> Mutates the given array.
+        // /// </summary>
+        // /// <param name="source">The array to filter. This will be mutated by this function.</param>
+        // /// <returns>The new length of <paramref name="source"/>.</returns>
+        // /// <inheritdoc cref="Sort{T}(T[], Predicate{T}, out T[])"/>
+		// public static T[] Sort<T>(this T[] source, Predicate<T> predicate) {
+		// 	if (source == null || predicate == null) throw new ArgumentNullException();
+		// 	source = source.Where(t => predicate(t)).ToArray();
+		// 	return source;
+		// }
+		// /// <inheritdoc cref="Sort{T}(T[], Predicate{T})"/>
+		// public static T[] Sort<T>(this T[] source, Func<T, bool> predicate) {
+		// 	if (source == null || predicate == null) throw new ArgumentNullException();
+		// 	source = source.Where(predicate).ToArray();
+		// 	return source;
+		// }
+		#endregion
+		// TODO: Add js-like map functions
 		#endregion
 
 		#region Validation
@@ -371,8 +447,13 @@ namespace JMor.Utility
 		public static bool IsInRange(this float value, Vector2 range) => value > range.x && value < range.y || value < range.x && value > range.y;
 
 		#region Casting
-		public static T As<T>(this object o) where T : class => (T)o;
-		public static T To<T>(this object o) where T : class => (T)o;
+		#nullable enable
+		public static T? As<T>(this object o) where T : class
+		{
+			try { return o as T; }
+			catch (InvalidCastException) { return null; }
+		}
+		#nullable restore
 		#endregion
 		#endregion
 	}
