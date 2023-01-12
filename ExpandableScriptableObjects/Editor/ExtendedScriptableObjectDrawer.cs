@@ -1,5 +1,5 @@
 // Developed by Tom Kail at Inkle
-// Released under the MIT Licence as held at https://opensource.org/licenses/MIT
+// Released under the MIT License as held at https://opensource.org/licenses/MIT
 
 using System;
 using System.Collections.Generic;
@@ -82,7 +82,7 @@ namespace JMor.EditorScripts.Utility
 				// So yeah having a foldout look like a label is a weird hack 
 				// but both code paths seem to need to be a foldout or 
 				// the object field control goes weird when the codepath changes.
-				// I guess because foldout is an interactable control of its own and throws off the controlID?
+				// I guess because foldout is an interactive control on its own and throws off the controlID?
 				foldoutRect.x += 12;
 				EditorGUI.Foldout(foldoutRect, property.isExpanded, guiContent, true, EditorStyles.label);
 			}
@@ -129,7 +129,7 @@ namespace JMor.EditorScripts.Utility
 							EditorGUI.PropertyField(new Rect(position.x, y, position.width - indentOffset/*position.width - buttonWidth*/, height), prop, true);
 							y += height + EditorGUIUtility.standardVerticalSpacing;
 						} while (prop.NextVisible(false));
-						// If there is a defined sub IMGUI method, execute it. This allows for this class to be inherited and extended (somewhat) easliy.
+						// If there is a defined sub IMGUI method, execute it. This allows for this class to be inherited and extended (somewhat) easily.
 						generateSubIMGUI?.Invoke(new Rect(position.x, y, position.width - indentOffset/*position.width - buttonWidth*/, position.height), serializedObject.GetIterator(), new GUIContent("Dynamic"));
 					}
 					if (GUI.changed)
@@ -181,7 +181,7 @@ namespace JMor.EditorScripts.Utility
 				// So yeah having a foldout look like a label is a weird hack 
 				// but both code paths seem to need to be a foldout or 
 				// the object field control goes weird when the codepath changes.
-				// I guess because foldout is an interactable control of its own and throws off the controlID?
+				// I guess because foldout is an interactive control of its own and throws off the controlID?
 				foldoutRect.x += 12;
 				EditorGUI.Foldout(foldoutRect, isExpanded, guiContent, true, EditorStyles.label);
 
@@ -260,7 +260,7 @@ namespace JMor.EditorScripts.Utility
 				// So yeah having a foldout look like a label is a weird hack 
 				// but both code paths seem to need to be a foldout or 
 				// the object field control goes weird when the codepath changes.
-				// I guess because foldout is an interactable control of its own and throws off the controlID?
+				// I guess because foldout is an interactive control of its own and throws off the controlID?
 				foldoutRect.x += 12;
 				EditorGUI.Foldout(foldoutRect, isExpanded, guiContent, true, EditorStyles.label);
 
