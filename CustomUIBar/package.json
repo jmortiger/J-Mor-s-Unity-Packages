@@ -1,6 +1,9 @@
 {
 	"name": "com.jmor.custom-ui-bar",
-	"version": "1.0.0",
+	"version": "1.0.1",
+	"dependencies": {
+		"com.unity.ugui": "1.0.0"
+	},
 	"displayName": "Custom UI Bar",
 	"unity": "2021.3",
 	"unityRelease": "4f1",
