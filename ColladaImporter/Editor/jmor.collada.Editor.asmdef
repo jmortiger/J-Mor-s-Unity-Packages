@@ -1,0 +1,18 @@
+{
+    "name": "ColladaImporter.Editor",
+    "rootNamespace": "JMor.EditorScripts",
+    "references": [
+        "GUID:5cceabf3e6ebdf745a2eac21639f39fe"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

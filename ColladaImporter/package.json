@@ -1,0 +1,19 @@
+{
+	"name": "com.jmor.collada-importer",
+	"version": "0.0.1",
+	"displayName": "Collada Importer",
+	"unity": "2021.3",
+	"unityRelease": "4f1",
+	"description": "A companion to Unity's .DAE importer that resolves issues, namely improper importing of cameras with a xfov and yfov",
+	"author": {
+		"name": "Justin Morris",
+		"url": "https://jgm-edu.github.io/"
+	},
+	"keywords": [
+		"jmor",
+		"j mor",
+		"collada",
+		".dae"
+	],
+	"license": "MIT"
+}
